@@ -27,6 +27,10 @@
       zone: public
       permanent: yes
       state: disabled
+  - name: Reload Firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: reloaded
   - name: Remove Config Files
     ansible.builtin.file:
       path: /etc/httpd

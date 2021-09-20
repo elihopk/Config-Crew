@@ -18,15 +18,17 @@
   - name: Open HTTP Service
     ansible.posix.firewalld:
       service: http
-      zone: public
       permanent: yes
       state: enabled
   - name: Open HTTPS Service
     ansible.posix.firewalld:
       service: https
-      zone: public
       permanent: yes
       state: enabled
+  - name: Reload Firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: reloaded
   - name: Ensure HTTPD Unit is Stopped
     ansible.builtin.systemd:
       name: httpd
