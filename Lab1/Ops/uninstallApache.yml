@@ -18,11 +18,13 @@
   - name: Close HTTP Service
     ansible.posix.firewalld:
       service: http
+      zone: public
       permanent: yes
       state: disabled
   - name: Close HTTPS Service
     ansible.posix.firewalld:
       service: https
+      zone: public
       permanent: yes
       state: disabled
   - name: Remove Config Files

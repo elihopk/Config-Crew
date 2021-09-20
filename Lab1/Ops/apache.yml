@@ -18,11 +18,13 @@
   - name: Open HTTP Service
     ansible.posix.firewalld:
       service: http
+      zone: public
       permanent: yes
       state: enabled
   - name: Open HTTPS Service
     ansible.posix.firewalld:
       service: https
+      zone: public
       permanent: yes
       state: enabled
   - name: Ensure HTTPD Unit is Stopped
