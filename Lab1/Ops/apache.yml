@@ -2,6 +2,8 @@
 # Depends on ansible.posix
 # Install with "ansible-galaxy collection install ansible.posix"
 - name: Deploy the Explore California Web Page to the Specified Hosts
+  # Target all hosts. This should be limited to 1 group using the limit flag of ansible-playbook
+  hosts: all
   remote_user: root
 
   tasks:
