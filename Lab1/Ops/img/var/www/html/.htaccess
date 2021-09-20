@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} ^(TRACE|OPTIONS|CONNECT|PUT|DELETE)
+RewriteRule .* - [F]
+
+Header unset ETag
+FileETag None
