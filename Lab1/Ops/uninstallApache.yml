@@ -1,0 +1,35 @@
+---
+# Depends on ansible.posix
+# Install with "ansible-galaxy collection install ansible.posix"
+- name: Remove the Explore California Web Page from Hosts Specified with Limit Flag
+  # Target all hosts. This should be limited to 1 group using the limit flag of ansible-playbook
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: Update Packages
+    ansible.builtin.yum:
+      name: '*'
+      state: latest
+  - name: Uninstall Apache
+    ansible.builtin.yum:
+      name: httpd
+      state: absent
+  - name: Close HTTP Service
+    ansible.posix.firewalld:
+      service: http
+      permanent: yes
+      state: disabled
+  - name: Close HTTPS Service
+    ansible.posix.firewalld:
+      service: https
+      permanent: yes
+      state: disabled
+  - name: Remove Config Files
+    ansible.builtin.file:
+      path: /etc/httpd
+      state: absent
+  - name: Remove Website Files
+    ansible.builtin.file:
+      path: /var/www
+      state: absent
