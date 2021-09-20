@@ -9,7 +9,7 @@
   tasks:
   - name: Update Packages
     ansible.builtin.yum:
-      name: *
+      name: '*'
       state: latest
   - name: Install Apache
     ansible.builtin.yum:
