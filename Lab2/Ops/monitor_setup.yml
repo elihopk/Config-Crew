@@ -1,0 +1,100 @@
+---
+#Depends on ansible.posix
+#Sets up zabbix monitoring server
+- name: setup monitor server
+  hosts: calWebMon
+  remote_user: root
+  vars:
+          name: zabbix
+          user: root
+          password: administrator
+
+  tasks:
+          - name: ensure epel is enabled
+            ansible.builtin.yum:
+                    name: epel-release
+                    state: latest
+          - name: Ensure Zabbix is updated
+            ansible.builtin.yum:
+                    name:  zabbix40
+                    state: latest
+          - name: Ensure zabbix sql is updated
+            ansible.builtin.yum:
+                    name: zabbix40-server-mysql
+          - name: Ensure apache is updated
+            ansible.builtin.yum:
+                    name: httpd
+                    state: latest
+          - name: Open HTTP Service
+            ansible.posix.firewalld:
+                    service: http
+                    permanent: yes
+                    state: enabled
+          - name: reload firewalld
+            ansible.builtin.systemd:
+                    name: firewalld
+                    state: reloaded
+          - name: Ensure the zabbix frontend is updated
+            ansible.builtin.yum:
+                    name: zabbix40-web
+                    state: latest
+          - name: Ensure mySQL is updated
+            ansible.builtin.yum:
+                    name: mysql
+                    state: latest
+          - name: install mysql-server
+            ansible.builtin.yum:
+                    name: mysql-server
+                    state: latest
+          - name: start mySQL Server
+            ansible.builtin.systemd:
+                    name: mysqld
+                    enabled: yes
+                    state: started
+          - name: install PyMySQL
+            ansible.builtin.yum:
+                    name: python3-PyMySQL
+                    state: latest
+          - name: create MySQL database
+            mysql_db:
+                    name: " {{ name }}"
+                    login_user: "{{ user }}"
+                    #         login_password: "{{ password }}"
+                    state: present
+                    collation: utf8_bin
+                    encoding: utf8
+          - name: setup mySQL database
+            mysql_db:
+                    state: import
+                    name: " {{ name }} "
+                    target: '/usr/share/zabbix-mysql/{{ item }}.sql'
+                         
+            with_items:
+                    - 'schema'
+                    - 'images'
+                    - 'data'
+          - name: copy config to zabbixserver configuration
+            ansible.builtin.template:
+                    src: /home/student/Documents/zabbix_server.j2
+                    dest: /etc/zabbix/zabbix_server.conf
+
+          - name: start zabbix server
+            ansible.builtin.systemd:
+                    name: zabbix-server-mysql
+                    enabled: yes
+                    state: started
+          - name: start zabbix server
+            ansible.builtin.systemd:
+                    name: zabbix-server.service
+                    enabled: yes
+                    state: started
+          - name: open monitoring port
+            ansible.posix.firewalld:
+                    service: zabbix-zerver
+                    permanent: yes
+                    state: enabled
+          - name: restart apache2
+            ansible.builtin.systemd:
+                    name: httpd
+                    enabled: yes
+                    state: restarted
