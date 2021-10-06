@@ -20,14 +20,14 @@
     ansible.builtin.yum:
       name: "{{ item }}"
       state: absent
-      with_items:
-        - httpd
-        - zabbix-server-mysql
-        - zabbix-web
-        - zabbix-web-mysql
-        - zabbix-apache-conf
-        - zabbix-sql-scripts
-        - zabbix-agent
+    with_items:
+      - httpd
+      - zabbix-server-mysql
+      - zabbix-web
+      - zabbix-web-mysql
+      - zabbix-apache-conf
+      - zabbix-sql-scripts
+      - zabbix-agent
 
   # Remove the Zabbix yum Repository
   - name: Remove Repository
@@ -61,9 +61,9 @@
     ansible.builtin.yum:
       name: "{{ item }}"
       state: absent
-      with_items:
-        - mysql
-        - python3-PyMySQL
+    with_items:
+      - mysql
+      - python3-PyMySQL
 
   # Close Unused HTTP Service and Zabbix Ports then Reload Firewalld
   - name: Close HTTP Service
@@ -77,9 +77,9 @@
         port: "10051/{{ item }}"
         permanent: yes
         state: disabled
-        with_items:
-          - tcp
-          - udp
+      with_items:
+        - tcp
+        - udp
 
   - name: Reload Firewalld
     ansible.builtin.systemd:
@@ -96,6 +96,6 @@
     ansible.builtin.file:
       path: {{ item }}
       state: absent
-      with_items:
-        - /etc/zabbix
-        - /home/student/zabbix-server.pp
+    with_items:
+      - /etc/zabbix
+      - /home/student/zabbix-server.pp

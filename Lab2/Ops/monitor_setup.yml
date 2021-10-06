@@ -38,24 +38,24 @@
       ansible.builtin.yum:
         name: "{{ item }}"
         state: latest
-        # Loop through each Zabbix Package
-        with_items:
-          - zabbix-server-mysql
-          - zabbix-web
-          - zabbix-web-mysql
-          - zabbix-apache-conf
-          - zabbix-sql-scripts
-          - zabbix-agent
+      # Loop through each Zabbix Package
+      with_items:
+        - zabbix-server-mysql
+        - zabbix-web
+        - zabbix-web-mysql
+        - zabbix-apache-conf
+        - zabbix-sql-scripts
+        - zabbix-agent
 
     # Installs all MySQL-Related Packages
     - name: Install MySQL
       ansible.builtin.yum:
         name: "{{ item }}"
         state: latest
-        with_items:
-          - mysql
-          - mysql-server
-          - python3-PyMySQL
+      with_items:
+        - mysql
+        - mysql-server
+        - python3-PyMySQL
 
     - name: Install Apache
       ansible.builtin.yum:
@@ -74,9 +74,9 @@
         port: "10051/{{ item }}"
         permanent: yes
         state: enabled
-        with_items:
-          - tcp
-          - udp
+      with_items:
+        - tcp
+        - udp
 
     - name: Reload Firewalld
       ansible.builtin.systemd:
@@ -142,11 +142,11 @@
         name: "{{ item }}"
         enabled: yes
         state: restarted
-        with_items:
-          - zabbix-server
-          - zabbix-agent
-          - php-fpm
-          - httpd
+      with_items:
+        - zabbix-server
+        - zabbix-agent
+        - php-fpm
+        - httpd
 
     # Add calWebProd Agent to Zabbix
     - name: Add Zabbix Agent

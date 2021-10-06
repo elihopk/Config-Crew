@@ -28,9 +28,9 @@
       ansible.builtin.yum:
         name: "{{ item }}"
         state: latest
-        with_items:
-          - "python3"
-          - "zabbix-agent"
+      with_items:
+        - python3
+        - zabbix-agent
 
     # Copy the Zabbix Agent Config Template
     - name: Write the Zabbix Agent Config File
