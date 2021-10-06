@@ -17,6 +17,7 @@
       name: zabbix-server-mysql
       state: absent
   - name: Uninstall Zabbix Web
+    ansible.builtin.yum:
       name: zabbix-web
       state: absent
   - name: Uninstall Zabbix Web MySQL
