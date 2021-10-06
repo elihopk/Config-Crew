@@ -25,11 +25,11 @@
       name: zabbix40-web
       state: absent
   - name: Stop mySQL Server
+    ignore_errors: yes
     ansible.builtin.systemd:
       name: mysqld
       enabled: no
       state: stopped
-      ignore_errors: yes
   - name: Uninstall Mysql
     ansible.builtin.yum:
       name: mysql
