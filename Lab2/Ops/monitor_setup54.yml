@@ -48,6 +48,7 @@
           - name: Install zabbix-api
             ansible.builtin.pip:
                     name: zabbix-api
+                    state: latest
           - name: Ensure apache is updated
             ansible.builtin.yum:
                     name: httpd
