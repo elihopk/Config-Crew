@@ -26,11 +26,11 @@
         state: absent
 
     # Enable the Zabbix Agent Firewall Service
-    - name: Enable zabbix-agent on Firewall
+    - name: Disable zabbix-agent on Firewall
       ansible.posix.firewalld:
         service: zabbix-agent
         permanent: yes
-        state: enabled
+        state: disabled
 
     # Reload the Firewall
     - name: Reload Firewalld
