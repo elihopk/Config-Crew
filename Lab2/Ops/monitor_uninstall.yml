@@ -58,7 +58,7 @@
       state: disabled
   - name: Close Monitoring Port
     ansible.posix.firewalld:
-      service: zabbix-server
+      service: zabbix-trapper
       permanent: yes
       state: disabled
   - name: Reload Firewalld

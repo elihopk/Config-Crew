@@ -91,7 +91,7 @@
           #          state: started
           - name: open monitoring port
             ansible.posix.firewalld:
-                    service: zabbix-agent
+                    service: zabbix-trapper
                     permanent: yes
                     state: enabled
           - name: restart apache2
