@@ -162,6 +162,8 @@
                     login_password: zabbix
                     host_name: calWebProd
                     visible_name: calWebProd
+                    host_groups:
+                            - Linux servers
                     interfaces:
                             - type: 1
                               main: 1
