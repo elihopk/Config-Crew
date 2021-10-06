@@ -45,6 +45,17 @@
             ansible.builtin.yum:
                     name: zabbix-agent
                     state: latest
+          - name: Install Pip
+            ansible.builtin.yum:
+                    name: python3-pip
+                    state: latest
+          - name: Install virtualenv
+            ansible.builtin.yum:
+                    name: python3-virtualenv
+                    state: latest
+          - name: Install setuptools
+                    name: python3-setuptools
+                    state: latest
           - name: Install zabbix-api
             ansible.builtin.pip:
                     name: zabbix-api
