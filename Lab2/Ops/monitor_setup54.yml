@@ -80,7 +80,7 @@
                     collation: utf8_bin
                     encoding: utf8
           - name: Unzip create.sql
-            ansible.builtin.shell: gunzip /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
+            ansible.builtin.shell: gunzip -f /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
           - name: setup mySQL database
             mysql_db:
                     state: import
