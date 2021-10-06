@@ -34,9 +34,11 @@
       enabled: no
       state: stopped
   - name: Uninstall Mysql Server
+    ansible.builtin.yum:
       name: mysql-server
       state: absent
   - name: Uninstall PyMySQL
+    ansible.builtin.yum:
       name: python3-PyMySQL
       state: absent
   - name: Close HTTP Service
