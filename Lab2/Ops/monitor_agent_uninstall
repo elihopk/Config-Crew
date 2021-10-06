@@ -1,0 +1,22 @@
+---
+# Uninstalls Zabbix Monitoring Agents
+- name: uninstall zabbix agents
+  hosts: monitored
+  # ansible_python_interpreter: '/usr/bin/python'
+  remote_user: root
+  vars:
+          monitor_server: '192.168.1.2'
+  tasks:
+          - name: Remove repository
+            yum_repository:
+                    name: zabbix
+                    state: absent
+          - name: Uninstall Zabbix Agent
+            ansible.builtin.yum:
+                    name: zabbix-agent
+                    state: absent
+          - name: Write the Zabbix config file
+            ansible.builtin.file:
+                    path: /etc/zabbix
+                    state: absent
+     

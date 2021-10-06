@@ -7,12 +7,18 @@
   vars:
           monitor_server: '192.168.1.2'
   tasks:
+          - name: Add repository
+            yum_repository:
+                    name: zabbix
+                    description: Zabbix Repo
+                    baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/
+                    gpgcheck: no
           - name: Ensure Python is Updated
             ansible.builtin.yum:
                     name: python2
                     state: latest
           - name: Ensure Zabbix Agent is Updated
-            ansible.builtin.dnf:
+            ansible.builtin.yum:
                     name: zabbix-agent
                     state: latest
           - name: Write the Zabbix config file
