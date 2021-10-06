@@ -28,6 +28,10 @@
     ansible.builtin.yum:
       name: zabbix-sql-scripts
       state: absent
+  - name: Uninstall Zabbix Agent
+    ansible.builtin.yum:
+      name: zabbix-agent
+      state: absent
   - name: Remove repository
     yum_repository:
       name: zabbix

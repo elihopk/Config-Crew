@@ -37,6 +37,10 @@
             ansible.builtin.yum:
                     name: zabbix-sql-scripts
                     state: latest
+          - name: Install zabbix-agent
+            ansible.builtin.yum:
+                    name: zabbix-agent
+                    state: latest
           - name: Ensure apache is updated
             ansible.builtin.yum:
                     name: httpd
@@ -62,7 +66,7 @@
             ansible.builtin.systemd:
                     name: mysqld
                     enabled: yes
-                    state: started
+                    state: restarted
           - name: install PyMySQL
             ansible.builtin.yum:
                     name: python3-PyMySQL
@@ -100,17 +104,17 @@
             ansible.builtin.systemd:
                     name: zabbix-server
                     enabled: yes
-                    state: started
+                    state: restarted
+          - name: start zabbix-agent
+            ansible.builtin.systemd:
+                    name: zabbix-agent
+                    enabled: yes
+                    state: restarted
           - name: start php-fpm
             ansible.builtin.systemd:
                     name: php-fpm
                     enabled: yes
-                    state: started
-          #- name: start zabbix server
-          #  ansible.builtin.systemd:
-          #          name: zabbix-server
-          #          enabled: yes
-          #          state: started
+                    state: restarted
           - name: open monitoring port TCP
             ansible.posix.firewalld:
                     port: 10051/tcp
