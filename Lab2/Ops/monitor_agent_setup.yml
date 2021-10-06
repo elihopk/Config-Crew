@@ -1,42 +1,58 @@
 ---
-#Sets up Zabbix Monitoring Agents
-- name: setup zabbix agents
+
+# Depends on ansible.posix
+
+#####################################################
+# Config Crew Ops Team Monitor Agent Setup Playbook #
+#####################################################
+
+# Usage: ansible-playbook monitor_agent_setup.yml
+
+- name: Setup Zabbix Agents
   hosts: monitored
-  # ansible_python_interpreter: '/usr/bin/python'
   remote_user: root
   vars:
-          monitor_server: '192.168.1.2'
+    monitor_server: '192.168.1.2'
+
   tasks:
-          - name: Add repository
-            yum_repository:
-                    name: zabbix
-                    description: Zabbix Repo
-                    baseurl: https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/
-                    gpgcheck: no
-          - name: Ensure Python is Updated
-            ansible.builtin.yum:
-                    name: python2
-                    state: latest
-          - name: Ensure Zabbix Agent is Updated
-            ansible.builtin.yum:
-                    name: zabbix-agent
-                    state: latest
-          - name: Write the Zabbix config file
-            ansible.builtin.template:
-                    src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_agentd.j2
-                    dest: /etc/zabbix/zabbix_agentd.conf
-          - name: Enable zabbix-agent on Firewall
-            ansible.posix.firewalld:
-                    service: zabbix-agent
-                    permanent: yes
-                    state: enabled
-          - name: reload firewalld
-            ansible.builtin.systemd:
-                    name: firewalld
-                    state: reloaded
-          - name: start Zabbix agent
-            ansible.builtin.service:
-                    name: zabbix-agent
-                    state: restarted
-                    enabled: yes
-     
+    # Add the Zabbix yum Repository
+    - name: Add Repository
+      ansible.builtin.yum_repository:
+        name: zabbix
+        description: Zabbix Repo
+        baseurl: https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/
+        gpgcheck: no
+
+    # Install Python and the Zabbix Agent
+    - name: Install Python and Zabbix Agent
+      ansible.builtin.yum:
+        name: {{ item }}
+        state: latest
+        with_items:
+          - python3
+          - zabbix-agent
+
+    # Copy the Zabbix Agent Config Template
+    - name: Write the Zabbix Agent Config File
+      ansible.builtin.template:
+        src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_agentd.j2
+        dest: /etc/zabbix/zabbix_agentd.conf
+
+    # Enable the Zabbix Agent Service on the Firewall then Reload it
+    - name: Enable zabbix-agent on Firewall
+      ansible.posix.firewalld:
+        service: zabbix-agent
+        permanent: yes
+        state: enabled
+
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
+
+    # Start and Enable the Zabbix Agent
+    - name: Start Zabbix Agent
+      ansible.builtin.service:
+        name: zabbix-agent
+        state: restarted
+        enabled: yes

@@ -1,76 +1,101 @@
 ---
+# Depends on ansible.posix and commnity.mysql
+
+###############################################################
+# Config Crew Ops Team Monitor Server Uninstallation Playbook #
+###############################################################
+
+# Usage: ansible-playbook monitor_uninstall.yml
 
 - name: Uninstall Monitoring Server
-  hosts: calWebMon
+  hosts: monitorServer
   remote_user: root
   vars:
     dbname: zabbix
     user: root
-    password: administrator
+
   tasks:
-  - name: Uninstall Epel Release
+  # Uninstall All Services except MySQL Related Ones
+  - name: Uninstall All Services
     ansible.builtin.yum:
-      name: epel-release
+      name: {{ item }}
       state: absent
-  - name: Uninstall Zabbix
-    ansible.builtin.yum:
-      name: zabbix40
+      with_items:
+        - httpd
+        - zabbix-server-mysql
+        - zabbix-web
+        - zabbix-web-mysql
+        - zabbix-apache-conf
+        - zabbix-sql-scripts
+        - zabbix-agent
+
+  # Remove the Zabbix yum Repository
+  - name: Remove Repository
+    ansible.builtin.yum_repository:
+      name: zabbix
       state: absent
-  - name: Uninstall Apache
-    ansible.builtin.yum:
-      name: httpd
-      state: absent
-  - name: Uninstall Zabbix SQL
-    ansible.builtin.yum:
-      name: zabbix40-server-mysql
-      state: absent
-  - name: Uninstall Zabbix Web
-    ansible.builtin.yum:
-      name: zabbix40-web
-      state: absent
-  - name: Drop MySQL Datanase
+
+  # Turn Off Flag Allowing Zabbix Server to Contact localhost Agent
+  - name: Set httpd_can_connect_zabbix flag off
+    ansible.posix.seboolean:
+      name: httpd_can_connect_zabbix
+      state: yes
+      persistent: yes
+
+  # Drop the Zabbix Database
+  - name: Drop MySQL Database
     mysql_db:
-      name: "{{ dbname }}"
-      login_user: "{{ user }}"
+      name: {{ dbname }}
+      login_user: {{ user }}
       state: absent
+
+  # Stop then Uninstall MySQL
   - name: Stop MySQL Server
     ignore_errors: yes
     ansible.builtin.systemd:
       name: mysqld
       enabled: no
       state: stopped
-  - name: Uninstall Mysql
+
+  - name: Uninstall Mysql and PyMySQL
     ansible.builtin.yum:
-      name: mysql
+      name: {{ item }}
       state: absent
-  - name: Uninstall Mysql Server
-    ansible.builtin.yum:
-      name: mysql-server
-      state: absent
-  - name: Uninstall PyMySQL
-    ansible.builtin.yum:
-      name: python3-PyMySQL
-      state: absent
+      with_items:
+        - mysql
+        - python3-PyMySQL
+
+  # Close Unused HTTP Service and Zabbix Ports then Reload Firewalld
   - name: Close HTTP Service
     ansible.posix.firewalld:
       service: http
       permanent: yes
       state: disabled
-  - name: open monitoring port TCP
-    ansible.posix.firewalld:
-      port: 10051/tcp
-      permanent: yes
-      state: disabled
-  - name: open monitoring port UDP
-    ansible.posix.firewalld:
-      port: 10051/udp
-      permanent: yes
-      state: disabled
+
+  - name: Close Zabbix Ports
+      ansible.posix.firewalld:
+        port: 10051/{{ item }}
+        permanent: yes
+        state: disabled
+        with_items:
+          - tcp
+          - udp
+
   - name: Reload Firewalld
     ansible.builtin.systemd:
       name: firewalld
       state: reloaded
-  - name: Remove Config Files
+
+  # - name: Remove Zabbix User
+  #   ansible.builtin.user:
+  #     name: zabbix
+  #     state: absent
+
+  # Remove Old Config Files and SEModule
+  - name: Remove Config Files and SEModule
     ansible.builtin.file:
-      path: /etc/zabbix
+      path: {{ item }}
       state: absent
+      with_items:
+        - /etc/zabbix
+        - /home/student/zabbix-server.pp

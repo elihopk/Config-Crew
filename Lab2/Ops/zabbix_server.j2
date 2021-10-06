@@ -35,7 +35,7 @@
 # Default:
 # LogFile=
 
-LogFile=/var/log/zabbixsrv/zabbix_server.log
+LogFile=/var/log/zabbix/zabbix_server.log
 
 ### Option: LogFileSize
 #	Maximum size of log file in MB.
@@ -45,6 +45,7 @@ LogFile=/var/log/zabbixsrv/zabbix_server.log
 # Range: 0-1024
 # Default:
 # LogFileSize=1
+
 LogFileSize=0
 
 ### Option: DebugLevel
@@ -67,21 +68,25 @@ LogFileSize=0
 # Mandatory: no
 # Default:
 # PidFile=/tmp/zabbix_server.pid
-PidFile=/run/zabbixsrv/zabbix_server.pid
+
+PidFile=/var/run/zabbix/zabbix_server.pid
 
 ### Option: SocketDir
 #	IPC socket directory.
-#       Directory to store IPC sockets used by internal Zabbix services.
+#		Directory to store IPC sockets used by internal Zabbix services.
 #
 # Mandatory: no
 # Default:
 # SocketDir=/tmp
-SocketDir=/var/lib/zabbixsrv/tmp
+
+SocketDir=/var/run/zabbix
 
 ### Option: DBHost
 #	Database host name.
 #	If set to localhost, socket is used for MySQL.
 #	If set to empty string, socket is used for PostgreSQL.
+#	If set to empty string, the Net Service Name connection method is used to connect to Oracle database; also see
+#	the TNS_ADMIN environment variable to specify the directory where the tnsnames.ora file is located.
 #
 # Mandatory: no
 # Default:
@@ -89,15 +94,18 @@ SocketDir=/var/lib/zabbixsrv/tmp
 
 ### Option: DBName
 #	Database name.
+#	If the Net Service Name connection method is used to connect to Oracle database, specify the service name from
+#	the tnsnames.ora file or set to empty string; also see the TWO_TASK environment variable if DBName is set to
+#	empty string.
 #
 # Mandatory: yes
 # Default:
 # DBName=
 
-DBName= {{ name }}
+DBName={{ dbname }}
 
 ### Option: DBSchema
-#	Schema name. Used for IBM DB2 and PostgreSQL.
+#	Schema name. Used for PostgreSQL.
 #
 # Mandatory: no
 # Default:
@@ -110,7 +118,7 @@ DBName= {{ name }}
 # Default:
 # DBUser=
 
-DBUser= {{ user }}
+DBUser={{ user }}
 
 ### Option: DBPassword
 #	Database password.
@@ -118,7 +126,7 @@ DBUser= {{ user }}
 #
 # Mandatory: no
 # Default:
-DBPassword= {{ password }}
+# DBPassword=
 
 ### Option: DBSocket
 #	Path to MySQL socket.
@@ -129,6 +137,8 @@ DBPassword= {{ password }}
 
 ### Option: DBPort
 #	Database port when not using local socket.
+#	If the Net Service Name connection method is used to connect to Oracle database, the port number from the
+#	tnsnames.ora file will be used. The port number set here will be ignored.
 #
 # Mandatory: no
 # Range: 1024-65535
@@ -175,6 +185,15 @@ DBPassword= {{ password }}
 # Default:
 # ExportFileSize=1G
 
+### Option: ExportType
+#	List of comma delimited types of real time export - allows to control export entities by their
+#	type (events, history, trends) individually.
+#	Valid only if ExportDir is set.
+#
+# Mandatory: no
+# Default:
+# ExportType=events,history,trends
+
 ############ ADVANCED PARAMETERS ################
 
 ### Option: StartPollers
@@ -187,7 +206,7 @@ DBPassword= {{ password }}
 
 ### Option: StartIPMIPollers
 #	Number of pre-forked instances of IPMI pollers.
-#       The IPMI manager process is automatically started when at least one IPMI poller is started.
+#		The IPMI manager process is automatically started when at least one IPMI poller is started.
 #
 # Mandatory: no
 # Range: 0-1000
@@ -196,7 +215,7 @@ DBPassword= {{ password }}
 
 ### Option: StartPreprocessors
 #	Number of pre-forked instances of preprocessing workers.
-#       The preprocessing manager process is automatically started when preprocessor worker is started.
+#		The preprocessing manager process is automatically started when preprocessor worker is started.
 #
 # Mandatory: no
 # Range: 1-1000
@@ -212,6 +231,16 @@ DBPassword= {{ password }}
 # Range: 0-1000
 # Default:
 # StartPollersUnreachable=1
+
+### Option: StartHistoryPollers
+#	Number of pre-forked instances of history pollers.
+#	Only required for calculated, aggregated and internal checks.
+#	A database connection is required for each history poller instance.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+# StartHistoryPollers=5
 
 ### Option: StartTrappers
 #	Number of pre-forked instances of trappers.
@@ -350,6 +379,8 @@ DBPassword= {{ password }}
 # Default:
 # SNMPTrapperFile=/tmp/zabbix_traps.tmp
 
+SNMPTrapperFile=/var/log/snmptrap/snmptrap.log
+
 ### Option: StartSNMPTrapper
 #	If 1, SNMP trapper process is started.
 #
@@ -365,8 +396,6 @@ DBPassword= {{ password }}
 # Mandatory: no
 # Default:
 # ListenIP=0.0.0.0
-
-# ListenIP=127.0.0.1
 
 ### Option: HousekeepingFrequency
 #	How often Zabbix will perform housekeeping procedure (in hours).
@@ -439,13 +468,22 @@ DBPassword= {{ password }}
 # HistoryIndexCacheSize=4M
 
 ### Option: TrendCacheSize
-#	Size of trend cache, in bytes.
+#	Size of trend write cache, in bytes.
 #	Shared memory size for storing trends data.
 #
 # Mandatory: no
 # Range: 128K-2G
 # Default:
 # TrendCacheSize=4M
+
+### Option: TrendFunctionCacheSize
+#	Size of trend function cache, in bytes.
+#	Shared memory size for caching calculated trend function data.
+#
+# Mandatory: no
+# Range: 128K-2G
+# Default:
+# TrendFunctionCacheSize=4M
 
 ### Option: ValueCacheSize
 #	Size of history value cache, in bytes.
@@ -506,8 +544,7 @@ Timeout=4
 #
 # Mandatory: no
 # Default:
-# AlertScriptsPath=/usr/share/zabbix/alertscripts
-AlertScriptsPath=/var/lib/zabbixsrv/alertscripts
+# AlertScriptsPath=/usr/lib/zabbix/alertscripts
 
 ### Option: ExternalScripts
 #	Full path to location of external scripts.
@@ -516,8 +553,7 @@ AlertScriptsPath=/var/lib/zabbixsrv/alertscripts
 #
 # Mandatory: no
 # Default:
-# ExternalScripts=/usr/share/zabbix/externalscripts
-ExternalScripts=/var/lib/zabbixsrv/externalscripts
+# ExternalScripts=/usr/lib/zabbix/externalscripts
 
 ### Option: FpingLocation
 #	Location of fping.
@@ -561,7 +597,6 @@ LogSlowQueries=3000
 # Mandatory: no
 # Default:
 # TmpDir=/tmp
-TmpDir=/var/lib/zabbixsrv/tmp
 
 ### Option: StartProxyPollers
 #	Number of pre-forked instances of pollers for passive proxies.
@@ -589,6 +624,14 @@ TmpDir=/var/lib/zabbixsrv/tmp
 # Default:
 # ProxyDataFrequency=1
 
+### Option: StartLLDProcessors
+#	Number of pre-forked instances of low level discovery processors.
+#
+# Mandatory: no
+# Range: 1-100
+# Default:
+# StartLLDProcessors=2
+
 ### Option: AllowRoot
 #	Allow the server to run as 'root'. If disabled and the server is started by 'root', the server
 #	will try to switch to the user specified by the User configuration option instead.
@@ -598,7 +641,7 @@ TmpDir=/var/lib/zabbixsrv/tmp
 #
 # Mandatory: no
 # Default:
-# AllowRoot=0
+AllowRoot=1
 
 ### Option: User
 #	Drop privileges to a specific, existing user on the system.
@@ -610,15 +653,15 @@ TmpDir=/var/lib/zabbixsrv/tmp
 
 ### Option: Include
 #	You may include individual files or all files in a directory in the configuration file.
-#	Installing Zabbix will create include directory in /etc, unless modified during the compile time.
+#	Installing Zabbix will create include directory in /usr/local/etc, unless modified during the compile time.
 #
 # Mandatory: no
 # Default:
 # Include=
 
-# Include=/etc/zabbix_server.general.conf
-# Include=/etc/zabbix_server.conf.d/
-# Include=/etc/zabbix_server.conf.d/*.conf
+# Include=/usr/local/etc/zabbix_server.general.conf
+# Include=/usr/local/etc/zabbix_server.conf.d/
+# Include=/usr/local/etc/zabbix_server.conf.d/*.conf
 
 ### Option: SSLCertLocation
 #	Location of SSL client certificates.
@@ -628,7 +671,7 @@ TmpDir=/var/lib/zabbixsrv/tmp
 #
 # Mandatory: no
 # Default:
-# SSLCertLocation=/usr/share/zabbix/ssl/certs
+# SSLCertLocation=${datadir}/zabbix/ssl/certs
 
 ### Option: SSLKeyLocation
 #	Location of private keys for SSL client certificates.
@@ -638,12 +681,12 @@ TmpDir=/var/lib/zabbixsrv/tmp
 #
 # Mandatory: no
 # Default:
-# SSLKeyLocation=/usr/share/zabbix/ssl/keys
+# SSLKeyLocation=${datadir}/zabbix/ssl/keys
 
 ### Option: SSLCALocation
 #	Override the location of certificate authority (CA) files for SSL server certificate verification.
 #	If not set, system-wide directory will be used.
-#	This parameter is used only in web monitoring and SMTP authentication.
+#	This parameter is used in web monitoring, SMTP authentication, HTTP agent items and for communication with Vault.
 #
 # Mandatory: no
 # Default:
@@ -661,6 +704,7 @@ TmpDir=/var/lib/zabbixsrv/tmp
 # Mandatory: no
 # Default:
 # StatsAllowedIP=
+StatsAllowedIP=127.0.0.1
 
 ####### LOADABLE MODULES #######
 
@@ -783,3 +827,112 @@ TmpDir=/var/lib/zabbixsrv/tmp
 # Mandatory: no
 # Default:
 # TLSCipherAll=
+
+### Option: DBTLSConnect
+#	Setting this option enforces to use TLS connection to database.
+#	required    - connect using TLS
+#	verify_ca   - connect using TLS and verify certificate
+#	verify_full - connect using TLS, verify certificate and verify that database identity specified by DBHost
+#	              matches its certificate
+#	On MySQL starting from 5.7.11 and PostgreSQL following values are supported: "required", "verify_ca" and
+#	"verify_full".
+#	On MariaDB starting from version 10.2.6 "required" and "verify_full" values are supported.
+#	Default is not to set any option and behavior depends on database configuration
+#
+# Mandatory: no
+# Default:
+# DBTLSConnect=
+
+### Option: DBTLSCAFile
+#	Full pathname of a file containing the top-level CA(s) certificates for database certificate verification.
+#	Supported only for MySQL and PostgreSQL
+#
+# Mandatory: no
+#	(yes, if DBTLSConnect set to one of: verify_ca, verify_full)
+# Default:
+# DBTLSCAFile=
+
+### Option: DBTLSCertFile
+#	Full pathname of file containing Zabbix server certificate for authenticating to database.
+#	Supported only for MySQL and PostgreSQL
+#
+# Mandatory: no
+# Default:
+# DBTLSCertFile=
+
+### Option: DBTLSKeyFile
+#	Full pathname of file containing the private key for authenticating to database.
+#	Supported only for MySQL and PostgreSQL
+#
+# Mandatory: no
+# Default:
+# DBTLSKeyFile=
+
+### Option: DBTLSCipher
+#	The list of encryption ciphers that Zabbix server permits for TLS protocols up through TLSv1.2
+#	Supported only for MySQL
+#
+# Mandatory no
+# Default:
+# DBTLSCipher=
+
+### Option: DBTLSCipher13
+#	The list of encryption ciphersuites that Zabbix server permits for TLSv1.3 protocol
+#	Supported only for MySQL, starting from version 8.0.16
+#
+# Mandatory no
+# Default:
+# DBTLSCipher13=
+
+### Option: VaultToken
+#	Vault authentication token that should have been generated exclusively for Zabbix server with read only permission
+#	to paths specified in Vault macros and read only permission to path specified in optional VaultDBPath
+#	configuration parameter.
+#	It is an error if VaultToken and VAULT_TOKEN environment variable are defined at the same time.
+#
+# Mandatory: no
+# Default:
+# VaultToken=
+
+### Option: VaultURL
+#	Vault server HTTP[S] URL. System-wide CA certificates directory will be used if SSLCALocation is not specified.
+#
+# Mandatory: no
+# Default:
+# VaultURL=https://127.0.0.1:8200
+
+### Option: VaultDBPath
+#	Vault path from where credentials for database will be retrieved by keys 'password' and 'username'.
+#	Example: secret/zabbix/database
+#	This option can only be used if DBUser and DBPassword are not specified.
+#
+# Mandatory: no
+# Default:
+# VaultDBPath=
+
+### Option: StartReportWriters
+#	Number of pre-forked report writer instances.
+#
+# Mandatory: no
+# Range: 0-100
+# Default:
+# StartReportWriters=0
+
+### Option: WebServiceURL
+#	URL to Zabbix web service, used to perform web related tasks.
+#	Example: http://localhost:10053/report
+#
+# Mandatory: no
+# Default:
+# WebServiceURL=
+
+####### For advanced users - TCP-related fine-tuning parameters #######
+
+## Option: ListenBacklog
+#       The maximum number of pending connections in the queue. This parameter is passed to
+#       listen() function as argument 'backlog' (see "man listen").
+#
+# Mandatory: no
+# Range: 0 - INT_MAX (depends on system, too large values may be silently truncated to implementation-specified maximum)
+# Default: SOMAXCONN (hard-coded constant, depends on system)
+# ListenBacklog=

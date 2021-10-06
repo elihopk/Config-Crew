@@ -1,22 +1,46 @@
 ---
-# Uninstalls Zabbix Monitoring Agents
-- name: uninstall zabbix agents
+
+# Depends on ansible.posix
+
+##############################################################
+# Config Crew Ops Team Monitor Agent Uninstallation Playbook #
+##############################################################
+
+# Usage: ansible-playbook monitor_agent_uninstall.yml
+
+- name: Uninstall Zabbix Agents
   hosts: monitored
-  # ansible_python_interpreter: '/usr/bin/python'
   remote_user: root
-  vars:
-          monitor_server: '192.168.1.2'
+
   tasks:
-          - name: Remove repository
-            yum_repository:
-                    name: zabbix
-                    state: absent
-          - name: Uninstall Zabbix Agent
-            ansible.builtin.yum:
-                    name: zabbix-agent
-                    state: absent
-          - name: Write the Zabbix config file
-            ansible.builtin.file:
-                    path: /etc/zabbix
-                    state: absent
+    # Remove the Zabbix yum Repository
+    - name: Remove Zabbix Repository
+      ansible.builtin.yum_repository:
+        name: zabbix
+        state: absent
+
+    # Uninstall the Zabbix Agent
+    - name: Uninstall Zabbix Agent
+      ansible.builtin.yum:
+        name: zabbix-agent
+        state: absent
+
+    # Enable the Zabbix Agent Firewall Service
+    - name: Enable zabbix-agent on Firewall
+      ansible.posix.firewalld:
+        service: zabbix-agent
+        permanent: yes
+        state: enabled
+
+    # Reload the Firewall
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
+
+    # Remove Zabbix Config Directory
+    - name: Remove Zabbix Config Directory
+      ansible.builtin.file:
+        path: /etc/zabbix
+        state: absent
      

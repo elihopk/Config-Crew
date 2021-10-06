@@ -1,106 +1,171 @@
 ---
-#Depends on ansible.posix
-#Sets up zabbix monitoring server
-- name: setup monitor server
-  hosts: calWebMon
+# Depends on ansible.posix, commnity.mysql, and community.zabbix
+# zabbix-api must be installed locally!
+# Install with pip3 install zabbix-api
+
+######################################################
+# Config Crew Ops Team Monitor Server Setup Playbook #
+######################################################
+
+# Usage: ansible-playbook monitor_setup.yml
+
+- name: Setup Monitor Servers
+  hosts: monitorServer
   remote_user: root
   vars:
-          name: zabbix
-          user: root
-          password: administrator
+    name: zabbix
+    user: root
 
   tasks:
-          - name: ensure epel is enabled
-            ansible.builtin.yum:
-                    name: epel-release
-                    state: latest
-          - name: Ensure Zabbix is updated
-            ansible.builtin.yum:
-                    name:  zabbix40
-                    state: latest
-          - name: Ensure zabbix sql is updated
-            ansible.builtin.yum:
-                    name: zabbix40-server-mysql
-                    state: latest
-          - name: Ensure apache is updated
-            ansible.builtin.yum:
-                    name: httpd
-                    state: latest
-          - name: Open HTTP Service
-            ansible.posix.firewalld:
-                    service: http
-                    permanent: yes
-                    state: enabled
-          - name: reload firewalld
-            ansible.builtin.systemd:
-                    name: firewalld
-                    state: reloaded
-          - name: Ensure the zabbix frontend is updated
-            ansible.builtin.yum:
-                    name: zabbix40-web
-                    state: latest
-          - name: Ensure mySQL is updated
-            ansible.builtin.yum:
-                    name: mysql
-                    state: latest
-          - name: install mysql-server
-            ansible.builtin.yum:
-                    name: mysql-server
-                    state: latest
-          - name: start mySQL Server
-            ansible.builtin.systemd:
-                    name: mysqld
-                    enabled: yes
-                    state: started
-          - name: install PyMySQL
-            ansible.builtin.yum:
-                    name: python3-PyMySQL
-                    state: latest
-          - name: create MySQL database
-            mysql_db:
-                    name: " {{ name }}"
-                    login_user: "{{ user }}"
-                    #         login_password: "{{ password }}"
-                    state: present
-                    collation: utf8_bin
-                    encoding: utf8
-          - name: setup mySQL database
-            mysql_db:
-                    state: import
-                    name: " {{ name }} "
-                    target: '/usr/share/zabbix-mysql/{{ item }}.sql'
-                         
-            with_items:
-                    - 'schema'
-                    - 'images'
-                    - 'data'
-          - name: copy config to zabbixserver configuration
-            ansible.builtin.template:
-                    src: /home/student/Documents/zabbix_server.j2
-                    dest: /etc/zabbix/zabbix_server.conf
+    # Add the Zabbix yum Repository
+    - name: Add repository
+      ansible.builtin.yum_repository:
+        name: zabbix
+        description: Zabbix Repo
+        baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/
+        # Trust Packages Downloaded from this Repo Automatically
+        gpgcheck: no
 
-          - name: start zabbix server
-            ansible.builtin.systemd:
-                    name: zabbix-server-mysql
-                    enabled: yes
-                    state: started
-          #- name: start zabbix server
-          #  ansible.builtin.systemd:
-          #          name: zabbix-server
-          #          enabled: yes
-          #          state: started
-          - name: open monitoring port TCP
-            ansible.posix.firewalld:
-                    port: 10051/tcp
-                    permanent: yes
-                    state: enabled
-          - name: open monitoring port UDP
-            ansible.posix.firewalld:
-                    port: 10051/udp
-                    permanent: yes
-                    state: enabled
-          - name: restart apache2
-            ansible.builtin.systemd:
-                    name: httpd
-                    enabled: yes
-                    state: restarted
+    # This Allows the Zabbix Server to Contact the localhost Agent
+    - name: Set httpd_can_connect_zabbix Flag On
+      ansible.posix.seboolean:
+        name: httpd_can_connect_zabbix
+        state: yes
+        persistent: yes
+
+    # Installs all Zabbix-Related Packages
+    - name: Install Zabbix
+      ansible.builtin.yum:
+        name: {{ item }}
+        state: latest
+        # Loop through each Zabbix Package
+        with_items:
+          - zabbix-server-mysql
+          - zabbix-web
+          - zabbix-web-mysql
+          - zabbix-apache-conf
+          - zabbix-sql-scripts
+          - zabbix-agent
+
+    # Installs all MySQL-Related Packages
+    - name: Install MySQL
+      ansible.builtin.yum:
+        name: {{ item }}
+        state: latest
+        with_items:
+          - mysql
+          - mysql-server
+          - python3-PyMySQL
+
+    - name: Install Apache
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    # Open HTTP Service and Zabbix Ports then Reload the Firewall
+    - name: Open HTTP Service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: Open Zabbix Ports
+      ansible.posix.firewalld:
+        port: 10051/{{ item }}
+        permanent: yes
+        state: enabled
+        with_items:
+          - tcp
+          - udp
+
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
+
+    # Must Make Sure MySQL is Running before Importing DB
+    - name: Start and Enable MySQL Server
+      ansible.builtin.systemd:
+        name: mysqld
+        enabled: yes
+        state: restarted
+
+    # - name: Create Zabbix User
+    #   ansible.builtin.user:
+    #     name: zabbix
+    #     group: root
+
+    # Create the Zabbix Database
+    - name: Create MySQL Database
+      community.mysql.mysql_db:
+        name: "{{ name }}"
+        login_user: "{{ user }}"
+        state: present
+        collation: utf8_bin
+        encoding: utf8
+
+    # Unzip the Database Creation Script
+    - name: Unzip create.sql
+      ansible.builtin.shell: gunzip -f /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
+
+    # Import the Database Creation Script
+    - name: Setup MySQL Database
+      community.mysql.mysql_db:
+        state: import
+        name: "{{ name }}"
+        target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
+    
+    # Copy the Zabbix Server Config Template
+    - name: Copy Zabbix Server Config
+      ansible.builtin.template:
+        src: zabbix_server.j2
+        dest: /etc/zabbix/zabbix_server.conf
+
+    # Copy and Install an SELinux Module to Solve Permissions Issues with Zabbix Server
+    - name: Copy Zabbix Server SELinux Module
+      ansible.builtin.copy:
+        src: zabbix-server.pp
+        dest: /home/student/zabbix-server.pp
+
+    - name: Install Zabbix Server SELinux Module
+      ansible.builtin.shell: semodule -i /home/student/zabbix-server.pp
+
+    # Copy a Premade Frontend Config to Prevent Installation Prompt on First Start
+    - name: Copy Zabbix Frontend Config
+      ansible.builtin.copy:
+        src: zabbix.conf.php
+        dest: /etc/zabbix/web/zabbix.conf.php
+
+    # Start and Enable All Relevant Services
+    - name: Start Services
+      ansible.builtin.systemd:
+        name: {{ item }}
+        enabled: yes
+        state: restarted
+        with_items:
+          - zabbix-server
+          - zabbix-agent
+          - php-fpm
+          - httpd
+
+    # Add calWebProd Agent to Zabbix
+    - name: Add Zabbix Agent
+      local_action:
+        module: community.zabbix.zabbix_host
+        server_url: http://{{ inventory_hostname }}/zabbix
+        login_user: Admin
+        login_password: zabbix
+        host_name: calWebProd
+        visible_name: calWebProd
+        host_groups:
+          - Linux servers
+        interfaces:
+          - type: '1'
+            main: 1
+            useip: 1
+            ip: 192.168.1.1
+        link_templates:
+          - Apache by Zabbix agent
+          - HTTP Service
+          - ICMP Ping
+          - Linux by Zabbix agent
