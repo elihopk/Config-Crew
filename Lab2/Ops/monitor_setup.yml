@@ -13,7 +13,7 @@
   hosts: monitorServer
   remote_user: root
   vars:
-    name: zabbix
+    dbname: zabbix
     user: root
 
   tasks:
@@ -98,7 +98,7 @@
     # Create the Zabbix Database
     - name: Create MySQL Database
       mysql_db:
-        name: "{{ name }}"
+        name: "{{ dbname }}"
         login_user: "{{ user }}"
         state: present
         collation: utf8_bin

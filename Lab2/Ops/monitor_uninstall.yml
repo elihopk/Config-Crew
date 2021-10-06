@@ -73,11 +73,11 @@
       state: disabled
 
   - name: Close Zabbix Ports
-      ansible.posix.firewalld:
-        port: "10051/{{ item }}"
-        permanent: yes
-        state: disabled
-      with_items:
+    ansible.posix.firewalld:
+      port: "10051/{{ item }}"
+      permanent: yes
+      state: disabled
+    with_items:
         - tcp
         - udp
 
@@ -94,7 +94,7 @@
   # Remove Old Config Files and SEModule
   - name: Remove Config Files and SEModule
     ansible.builtin.file:
-      path: {{ item }}
+      path: "{{ item }}"
       state: absent
     with_items:
       - /etc/zabbix
