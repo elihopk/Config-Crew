@@ -40,7 +40,6 @@
     yum_repository:
       name: zabbix
       state: absent
-    notify: yum-clean-metadata
   - name: Set httpd_can_connect_zabbix flag off
     ansible.posix.seboolean:
       name: httpd_can_connect_zabbix
