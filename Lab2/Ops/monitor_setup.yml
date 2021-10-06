@@ -36,7 +36,7 @@
     # Installs all Zabbix-Related Packages
     - name: Install Zabbix
       ansible.builtin.yum:
-        name: {{ item }}
+        name: "{{ item }}"
         state: latest
         # Loop through each Zabbix Package
         with_items:
@@ -50,7 +50,7 @@
     # Installs all MySQL-Related Packages
     - name: Install MySQL
       ansible.builtin.yum:
-        name: {{ item }}
+        name: "{{ item }}"
         state: latest
         with_items:
           - mysql
@@ -71,7 +71,7 @@
 
     - name: Open Zabbix Ports
       ansible.posix.firewalld:
-        port: 10051/{{ item }}
+        port: "10051/{{ item }}"
         permanent: yes
         state: enabled
         with_items:
@@ -112,7 +112,7 @@
     - name: Setup MySQL Database
       community.mysql.mysql_db:
         state: import
-        name: "{{ name }}"
+        name: "{{ dbname }}"
         target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
     
     # Copy the Zabbix Server Config Template
@@ -139,7 +139,7 @@
     # Start and Enable All Relevant Services
     - name: Start Services
       ansible.builtin.systemd:
-        name: {{ item }}
+        name: "{{ item }}"
         enabled: yes
         state: restarted
         with_items:

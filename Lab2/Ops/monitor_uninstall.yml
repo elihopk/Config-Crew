@@ -18,7 +18,7 @@
   # Uninstall All Services except MySQL Related Ones
   - name: Uninstall All Services
     ansible.builtin.yum:
-      name: {{ item }}
+      name: "{{ item }}"
       state: absent
       with_items:
         - httpd
@@ -45,8 +45,8 @@
   # Drop the Zabbix Database
   - name: Drop MySQL Database
     mysql_db:
-      name: {{ dbname }}
-      login_user: {{ user }}
+      name: "{{ dbname }}"
+      login_user: "{{ user }}"
       state: absent
 
   # Stop then Uninstall MySQL
@@ -59,7 +59,7 @@
 
   - name: Uninstall Mysql and PyMySQL
     ansible.builtin.yum:
-      name: {{ item }}
+      name: "{{ item }}"
       state: absent
       with_items:
         - mysql
@@ -74,7 +74,7 @@
 
   - name: Close Zabbix Ports
       ansible.posix.firewalld:
-        port: 10051/{{ item }}
+        port: "10051/{{ item }}"
         permanent: yes
         state: disabled
         with_items:
