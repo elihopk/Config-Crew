@@ -8,14 +8,6 @@
     user: root
     password: administrator
   tasks:
-  - name: Uninstall Epel Release
-    ansible.builtin.yum:
-      name: epel-release
-      state: absent
-  - name: Uninstall Zabbix
-    ansible.builtin.yum:
-      name: zabbix40
-      state: absent
   - name: Uninstall Apache
     ansible.builtin.yum:
       name: httpd
@@ -87,6 +79,10 @@
     ansible.builtin.systemd:
       name: firewalld
       state: reloaded
+  - name: Remove Zabbix User
+    ansible.builtin.user:
+      name: zabbix
+      state: absent
   - name: Remove Config Files
     ansible.builtin.file:
       path: /etc/zabbix

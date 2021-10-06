@@ -67,6 +67,10 @@
             ansible.builtin.yum:
                     name: python3-PyMySQL
                     state: latest
+          - name: Create Zabbix User
+            ansible.builtin.user:
+                    name: zabbix
+                    group: root
           - name: create MySQL database
             mysql_db:
                     name: " {{ name }}"
@@ -82,10 +86,10 @@
                     state: import
                     name: "{{ name }}"
                     target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
-          #- name: copy config to zabbixserver configuration
-          #  ansible.builtin.template:
-          #          src: /home/student/Documents/zabbix_server.j2
-          #          dest: /etc/zabbix/zabbix_server.conf
+          - name: copy config to zabbixserver configuration
+            ansible.builtin.template:
+                    src: /home/student/Documents/zabbix_server54.j2
+                    dest: /etc/zabbix/zabbix_server.conf
 
           - name: start zabbix server
             ansible.builtin.systemd:
