@@ -24,15 +24,15 @@
     ansible.builtin.yum:
       name: zabbix40-web
       state: absent
-  - name: Uninstall Mysql
-    ansible.builtin.yum:
-      name: mysql
-      state: absent
   - name: Stop mySQL Server
     ansible.builtin.systemd:
       name: mysqld
       enabled: no
       state: stopped
+  - name: Uninstall Mysql
+    ansible.builtin.yum:
+      name: mysql
+      state: absent
   - name: Uninstall Mysql Server
     ansible.builtin.yum:
       name: mysql-server
