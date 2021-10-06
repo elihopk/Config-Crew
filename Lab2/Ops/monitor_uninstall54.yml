@@ -68,6 +68,10 @@
     ansible.builtin.yum:
       name: python3-PyMySQL
       state: absent
+  - name: Uninstall zabbix-api
+    ansible.builtin.pip:
+      name: zabbix-api
+      state: absent
   - name: Close HTTP Service
     ansible.posix.firewalld:
       service: http
