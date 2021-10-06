@@ -20,14 +20,32 @@
     ansible.builtin.yum:
       name: httpd
       state: absent
-  - name: Uninstall Zabbix SQL
+  - name: Uninstall Zabbix Server
     ansible.builtin.yum:
-      name: zabbix40-server-mysql
+      name: zabbix-server-mysql
       state: absent
   - name: Uninstall Zabbix Web
     ansible.builtin.yum:
-      name: zabbix40-web
+      name: zabbix-web-mysql
       state: absent
+  - name: Uninstall Zabbix Apache Conf
+    ansible.builtin.yum:
+      name: zabbix-apache-conf
+      state: absent
+  - name: Uninstall Zabbix SQL Scripts
+    ansible.builtin.yum:
+      name: zabbix-sql-scripts
+      state: absent
+  - name: Remove repository
+    yum_repository:
+      name: zabbix
+      state: absent
+    notify: yum-clean-metadata
+  - name: Set httpd_can_connect_zabbix flag off
+    ansible.posix.seboolean:
+      name: httpd_can_connect_zabbix
+      state: yes
+      persistent: yes
   - name: Drop MySQL Datanase
     mysql_db:
       name: "{{ dbname }}"

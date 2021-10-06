@@ -1,0 +1,121 @@
+---
+#Depends on ansible.posix
+#Sets up zabbix monitoring server
+- name: setup monitor server
+  hosts: calWebMon
+  remote_user: root
+  vars:
+          name: zabbix
+          user: root
+          password: administrator
+
+  tasks:
+          - name: Add repository
+            yum_repository:
+                    name: zabbix
+                    description: Zabbix Repo
+                    baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/
+          - name: Set httpd_can_connect_zabbix flag on
+            ansible.posix.seboolean:
+                    name: httpd_can_connect_zabbix
+                    state: yes
+                    persistent: yes
+          - name: Install zabbix-server-mysql
+            ansible.builtin.yum:
+                    name: zabbix-server-mysql
+                    state: latest
+          - name: Install zabbix-web-mysql
+            ansible.builtin.yum:
+                    name:  zabbix-web-mysql
+                    state: latest
+          - name: Install zabbix-apache-conf
+            ansible.builtin.yum:
+                    name: zabbix-apache-conf
+                    state: latest
+          - name: Install zabbix-sql-scripts
+            ansible.builtin.yum:
+                    name: zabbix-sql-scripts
+                    state: latest
+          - name: Ensure apache is updated
+            ansible.builtin.yum:
+                    name: httpd
+                    state: latest
+          - name: Open HTTP Service
+            ansible.posix.firewalld:
+                    service: http
+                    permanent: yes
+                    state: enabled
+          - name: reload firewalld
+            ansible.builtin.systemd:
+                    name: firewalld
+                    state: reloaded
+          - name: Ensure mySQL is updated
+            ansible.builtin.yum:
+                    name: mysql
+                    state: latest
+          - name: install mysql-server
+            ansible.builtin.yum:
+                    name: mysql-server
+                    state: latest
+          - name: start mySQL Server
+            ansible.builtin.systemd:
+                    name: mysqld
+                    enabled: yes
+                    state: started
+          - name: install PyMySQL
+            ansible.builtin.yum:
+                    name: python3-PyMySQL
+                    state: latest
+          - name: create MySQL database
+            mysql_db:
+                    name: " {{ name }}"
+                    login_user: "{{ user }}"
+                    #         login_password: "{{ password }}"
+                    state: present
+                    collation: utf8_bin
+                    encoding: utf8
+          - name: Unzip create.sql
+            ansible.builtin.unarchive:
+                    src: /usr/share/doc/zabbix-sql-scripts/mysql/create.sql
+                    dest: /usr/share/doc/zabbix-sql-scripts/mysql
+                    remote_src: yes
+          - name: setup mySQL database
+            mysql_db:
+                    state: import
+                    name: "{{ name }}"
+                    target: '/usr/share/zabbix-mysql/create.sql'
+          #- name: copy config to zabbixserver configuration
+          #  ansible.builtin.template:
+          #          src: /home/student/Documents/zabbix_server.j2
+          #          dest: /etc/zabbix/zabbix_server.conf
+
+          - name: start zabbix server
+            ansible.builtin.systemd:
+                    name: zabbix-server
+                    enabled: yes
+                    state: started
+          - name: start php-fpm
+            ansible.builtin.systemd:
+                    name: php-fpm
+                    enabled: yes
+                    state: started
+          #- name: start zabbix server
+          #  ansible.builtin.systemd:
+          #          name: zabbix-server
+          #          enabled: yes
+          #          state: started
+          - name: open monitoring port TCP
+            ansible.posix.firewalld:
+                    port: 10051/tcp
+                    permanent: yes
+                    state: enabled
+          - name: open monitoring port UDP
+            ansible.posix.firewalld:
+                    port: 10051/udp
+                    permanent: yes
+                    state: enabled
+          - name: restart apache2
+            ansible.builtin.systemd:
+                    name: httpd
+                    enabled: yes
+                    state: restarted
