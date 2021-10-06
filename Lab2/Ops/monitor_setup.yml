@@ -97,7 +97,7 @@
 
     # Create the Zabbix Database
     - name: Create MySQL Database
-      community.mysql.mysql_db:
+      mysql_db:
         name: "{{ name }}"
         login_user: "{{ user }}"
         state: present
@@ -110,7 +110,7 @@
 
     # Import the Database Creation Script
     - name: Setup MySQL Database
-      community.mysql.mysql_db:
+      mysql_db:
         state: import
         name: "{{ dbname }}"
         target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
