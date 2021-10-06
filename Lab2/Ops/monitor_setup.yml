@@ -91,12 +91,12 @@
           #          state: started
           - name: open monitoring port TCP
             ansible.posix.firewalld:
-                    port: 10051/TCP
+                    port: 10051/tcp
                     permanent: yes
                     state: enabled
           - name: open monitoring port UDP
             ansible.posix.firewalld:
-                    port: 10051/UDP
+                    port: 10051/udp
                     permanent: yes
                     state: enabled
           - name: restart apache2
