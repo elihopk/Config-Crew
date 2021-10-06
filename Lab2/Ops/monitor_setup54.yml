@@ -90,7 +90,12 @@
             ansible.builtin.template:
                     src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_server54.j2
                     dest: /etc/zabbix/zabbix_server.conf
-
+          - name: copy zabbix-server SELinux module
+            ansible.builtin.copy:
+                    src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix-server.pp
+                    dest: /home/student/zabbix-server.pp
+          - name: Install zabbix-server SELinux module
+            ansible.builtin.shell: semodule -i /home/student/zabbix-server.pp
           - name: start zabbix server
             ansible.builtin.systemd:
                     name: zabbix-server

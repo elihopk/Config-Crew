@@ -87,3 +87,7 @@
     ansible.builtin.file:
       path: /etc/zabbix
       state: absent
+  - name: Remove Zabbix-Server SEModule
+    ansible.builtin.file:
+      path: /home/student/zabbix-server.pp
+      state: absent
