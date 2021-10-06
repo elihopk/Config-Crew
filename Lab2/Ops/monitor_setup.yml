@@ -84,11 +84,11 @@
                     name: zabbix-server-mysql
                     enabled: yes
                     state: started
-          - name: start zabbix server
-            ansible.builtin.systemd:
-                    name: zabbix-server.service
-                    enabled: yes
-                    state: started
+          #- name: start zabbix server
+          #  ansible.builtin.systemd:
+          #          name: zabbix-server
+          #          enabled: yes
+          #          state: started
           - name: open monitoring port
             ansible.posix.firewalld:
                     service: zabbix-zerver
