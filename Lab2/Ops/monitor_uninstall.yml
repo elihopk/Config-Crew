@@ -29,6 +29,7 @@
       name: mysqld
       enabled: no
       state: stopped
+      ignore_errors: yes
   - name: Uninstall Mysql
     ansible.builtin.yum:
       name: mysql
