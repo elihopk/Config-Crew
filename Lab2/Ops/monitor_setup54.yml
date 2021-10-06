@@ -25,6 +25,10 @@
             ansible.builtin.yum:
                     name: zabbix-server-mysql
                     state: latest
+          - name: Explicitly Install zabbix-web
+            ansible.builtin.yum:
+                    name: zabbix-web
+                    state: latest
           - name: Install zabbix-web-mysql
             ansible.builtin.yum:
                     name:  zabbix-web-mysql
