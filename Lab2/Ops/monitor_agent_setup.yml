@@ -23,7 +23,7 @@
                     state: latest
           - name: Write the Zabbix config file
             ansible.builtin.template:
-                    src: /home/student/Documents/zabbix_agentd.j2
+                    src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_agentd.j2
                     dest: /etc/zabbix/zabbix_agentd.conf
           - name: start Zabbix agent
             ansible.builtin.service:
