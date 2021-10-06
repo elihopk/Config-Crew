@@ -76,15 +76,12 @@
                     collation: utf8_bin
                     encoding: utf8
           - name: Unzip create.sql
-            ansible.builtin.unarchive:
-                    src: /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
-                    dest: /usr/share/doc/zabbix-sql-scripts/mysql
-                    remote_src: yes
+            ansible.builtin.shell: gunzip /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
           - name: setup mySQL database
             mysql_db:
                     state: import
                     name: "{{ name }}"
-                    target: '/usr/share/zabbix-mysql/create.sql'
+                    target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
           #- name: copy config to zabbixserver configuration
           #  ansible.builtin.template:
           #          src: /home/student/Documents/zabbix_server.j2
