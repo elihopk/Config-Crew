@@ -3,6 +3,10 @@
 - name: Uninstall Monitoring Server
   hosts: calWebMon
   remote_user: root
+  vars:
+    dbname: zabbix
+    user: root
+    password: administrator
   tasks:
   - name: Uninstall Epel Release
     ansible.builtin.yum:
@@ -24,7 +28,12 @@
     ansible.builtin.yum:
       name: zabbix40-web
       state: absent
-  - name: Stop mySQL Server
+  - name: Drop MySQL Datanase
+    mysql_db:
+      name: "{{ dbname }}"
+      login_user: "{{ user }}"
+      state: absent
+  - name: Stop MySQL Server
     ignore_errors: yes
     ansible.builtin.systemd:
       name: mysqld
