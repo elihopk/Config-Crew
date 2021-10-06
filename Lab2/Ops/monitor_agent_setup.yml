@@ -25,6 +25,15 @@
             ansible.builtin.template:
                     src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_agentd.j2
                     dest: /etc/zabbix/zabbix_agentd.conf
+          - name: Enable zabbix-agent on Firewall
+            ansible.posix.firewalld:
+                    service: zabbix-agent
+                    permanent: yes
+                    state: enabled
+          - name: reload firewalld
+            ansible.builtin.systemd:
+                    name: firewalld
+                    state: reloaded
           - name: start Zabbix agent
             ansible.builtin.service:
                     name: zabbix-agent
