@@ -154,8 +154,8 @@
             local_action:
                     module: community.zabbix.zabbix_host
                     server_url: http://192.168.1.2/zabbix
-                    login_user: Admin
-                    login_password: zabbix
+                    http_login_user: Admin
+                    http_login_password: zabbix
                     host_name: calWebProd
                     visible_name: calWebProd
                     interfaces:
