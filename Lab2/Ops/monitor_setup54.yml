@@ -77,7 +77,7 @@
                     encoding: utf8
           - name: Unzip create.sql
             ansible.builtin.unarchive:
-                    src: /usr/share/doc/zabbix-sql-scripts/mysql/create.sql
+                    src: /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz
                     dest: /usr/share/doc/zabbix-sql-scripts/mysql
                     remote_src: yes
           - name: setup mySQL database
