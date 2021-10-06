@@ -47,7 +47,7 @@ do
     elif [[ ${choice^^} == "O" ]]
     then
         echo "Running Siege with \e[31m500\e[0m Concurrent Users, \e[35m50\e[0m Repetitions, and Under \e[34m5\e[0m Second Delay..."
-        siege -c 500 -r 50 -d 5 $IP
+        siege -c 1000 -r 50 -d 5 $IP
     # User Entered Invalid Code
     else
         echo "Invalid Load Choice!"
