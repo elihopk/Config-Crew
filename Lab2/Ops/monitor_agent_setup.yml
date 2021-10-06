@@ -11,7 +11,7 @@
             yum_repository:
                     name: zabbix
                     description: Zabbix Repo
-                    baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/
+                    baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/7/x86_64/
                     gpgcheck: no
           - name: Ensure Python is Updated
             ansible.builtin.yum:
