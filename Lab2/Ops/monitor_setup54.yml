@@ -54,6 +54,7 @@
                     name: python3-virtualenv
                     state: latest
           - name: Install setuptools
+            ansible.builtin.yum:
                     name: python3-setuptools
                     state: latest
           - name: Install zabbix-api
