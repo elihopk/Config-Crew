@@ -134,16 +134,21 @@
             ansible.builtin.systemd:
                     name: firewalld
                     state: reloaded
-        #   - name: Add Zabbix Agent
-        #     local_action:
-        #             module: community.zabbix.zabbix_host
-        #             server_url: http://calWebMon/zabbix
-        #             login_user: Admin
-        #             login_password: zabbix
-        #             host_name: calWebProd
-        #             visible_name: calWebProd
-        #             interfaces:
-        #                     - type: 1
-        #                       main: 1
-        #                       useip: 1
-        #                       ip: 192.168.1.1
+          - name: Add Zabbix Agent
+            local_action:
+                    module: community.zabbix.zabbix_host
+                    server_url: http://calWebMon/zabbix
+                    login_user: Admin
+                    login_password: zabbix
+                    host_name: calWebProd
+                    visible_name: calWebProd
+                    interfaces:
+                            - type: 1
+                              main: 1
+                              useip: 1
+                              ip: 192.168.1.1
+                    link_templates:
+                            - Apache by Zabbix agent
+                            - HTTP Service
+                            - ICMP Ping
+                            - Linux by Zabbix agent
