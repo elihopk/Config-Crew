@@ -21,6 +21,7 @@
           - name: Ensure zabbix sql is updated
             ansible.builtin.yum:
                     name: zabbix40-server-mysql
+                    state: latest
           - name: Ensure apache is updated
             ansible.builtin.yum:
                     name: httpd
