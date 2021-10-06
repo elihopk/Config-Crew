@@ -116,6 +116,10 @@
                     dest: /home/student/zabbix-server.pp
           - name: Install zabbix-server SELinux module
             ansible.builtin.shell: semodule -i /home/student/zabbix-server.pp
+          - name: Copy Zabbix Frontend Config
+            ansible.builtin.copy:
+                    src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix.conf.php
+                    dest: /etc/zabbix/web/zabbix.conf.php
           - name: start zabbix server
             ansible.builtin.systemd:
                     name: zabbix-server
@@ -154,8 +158,8 @@
             local_action:
                     module: community.zabbix.zabbix_host
                     server_url: http://192.168.1.2/zabbix
-                    http_login_user: Admin
-                    http_login_password: zabbix
+                    login_user: Admin
+                    login_password: zabbix
                     host_name: calWebProd
                     visible_name: calWebProd
                     interfaces:
