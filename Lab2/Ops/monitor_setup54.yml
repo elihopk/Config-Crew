@@ -7,7 +7,7 @@
   vars:
           name: zabbix
           user: root
-          password: administrator
+          #password: administrator
 
   tasks:
           - name: Add repository
@@ -50,10 +50,6 @@
                     service: http
                     permanent: yes
                     state: enabled
-          - name: reload firewalld
-            ansible.builtin.systemd:
-                    name: firewalld
-                    state: reloaded
           - name: Ensure mySQL is updated
             ansible.builtin.yum:
                     name: mysql
@@ -130,3 +126,7 @@
                     name: httpd
                     enabled: yes
                     state: restarted
+          - name: reload firewalld
+            ansible.builtin.systemd:
+                    name: firewalld
+                    state: reloaded
