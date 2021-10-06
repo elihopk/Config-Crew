@@ -88,7 +88,7 @@
                     target: '/usr/share/doc/zabbix-sql-scripts/mysql/create.sql'
           - name: copy config to zabbixserver configuration
             ansible.builtin.template:
-                    src: /home/student/Documents/zabbix_server54.j2
+                    src: /home/student/Desktop/Config-Crew/Lab2/Ops/zabbix_server54.j2
                     dest: /etc/zabbix/zabbix_server.conf
 
           - name: start zabbix server
