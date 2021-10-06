@@ -15,6 +15,7 @@
                     name: zabbix
                     description: Zabbix Repo
                     baseurl: https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/
+                    gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
           - name: Set httpd_can_connect_zabbix flag on
             ansible.posix.seboolean:
                     name: httpd_can_connect_zabbix
