@@ -112,9 +112,7 @@ LogFileSize=0
 #
 # Mandatory: yes, if StartAgents is not explicitly set to 0
 # Default:
-# Server=
-
-Server={{ monitor_server }}
+Server=0.0.0.0/0
 
 ### Option: ListenPort
 #	Agent will listen on this port for connections from the server.
@@ -122,7 +120,7 @@ Server={{ monitor_server }}
 # Mandatory: no
 # Range: 1024-32767
 # Default:
-# ListenPort=10050
+ListenPort=10050
 
 ### Option: ListenIP
 #	List of comma delimited IP addresses that the agent should listen on.
@@ -155,7 +153,7 @@ Server={{ monitor_server }}
 # Default:
 # ServerActive=
 
-ServerActive={{ monitor_server }}
+ServerActive={{ monitor_server }}:10051
 
 ### Option: Hostname
 #	List of comma delimited unique, case sensitive hostnames.
@@ -166,7 +164,7 @@ ServerActive={{ monitor_server }}
 # Default:
 # Hostname=
 
-Hostname=Zabbix server
+Hostname=calWebProd
 
 ### Option: HostnameItem
 #	Item used for generating Hostname if it is undefined. Ignored if Hostname is defined.
