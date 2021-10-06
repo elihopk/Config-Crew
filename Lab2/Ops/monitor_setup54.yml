@@ -153,7 +153,7 @@
           - name: Add Zabbix Agent
             local_action:
                     module: community.zabbix.zabbix_host
-                    server_url: http://calWebMon/zabbix
+                    server_url: http://192.168.1.2/zabbix
                     login_user: Admin
                     login_password: zabbix
                     host_name: calWebProd
