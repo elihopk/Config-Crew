@@ -1,0 +1,59 @@
+---
+
+- name: Uninstall Monitoring Server
+  hosts: calWebMon
+  remote_user: root
+  tasks:
+  - name: Uninstall Epel Release
+    ansible.builtin.yum:
+      name: epel-release
+      state: absent
+  - name: Uninstall Zabbix
+    ansible.builtin.yum:
+      name: zabbix40
+      state: absent
+  - name: Uninstall Apache
+    ansible.builtin.yum:
+      name: httpd
+      state: absent
+  - name: Uninstall Zabbix SQL
+    ansible.builtin.yum:
+      name: zabbix40-server-mysql
+      state: absent
+  - name: Uninstall Zabbix Web
+    ansible.builtin.yum:
+      name: zabbix40-web
+      state: absent
+  - name: Uninstall Mysql
+    ansible.builtin.yum:
+      name: mysql
+      state: absent
+  - name: Stop mySQL Server
+    ansible.builtin.systemd:
+      name: mysqld
+      enabled: no
+      state: stopped
+  - name: Uninstall Mysql Server
+      name: mysql-server
+      state: absent
+  - name: Uninstall PyMySQL
+      name: python3-PyMySQL
+      state: absent
+  - name: Close HTTP Service
+    ansible.posix.firewalld:
+      service: http
+      permanent: yes
+      state: disabled
+  - name: Close Monitoring Port
+    ansible.posix.firewalld:
+      service: zabbix-server
+      permanent: yes
+      state: disabled
+  - name: Reload Firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: reloaded
+  - name: Remove Config Files
+    ansible.builtin.file:
+      path: /etc/zabbix
+      state: absent
