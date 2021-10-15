@@ -18,6 +18,11 @@
       ansible.builtin.file:
         name: /etc/nginx
         state: absent
+    
+    - name: Remove User
+      ansible.builtin.user:
+        name: www-data
+        state: absent
 
     # Remove the Nginx yum Repository
     - name: Remove Repository
