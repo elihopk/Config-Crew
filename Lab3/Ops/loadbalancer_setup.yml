@@ -1,4 +1,5 @@
 ---
+# Depends on ansible.posix
 
 ######################################################
 # Config Crew Ops Team Monitor Server Setup Playbook #
@@ -32,12 +33,17 @@
         src: nginx.j2
         dest: /etc/nginx/nginx.conf
 
-    # Overwrite Loadbalancer Hosts File to that of the Local Machine
-    # This is to Allow the Hostnames Pulled from Ansible's Inventory for Web Servers to Function Correctly
-    - name: Write Hosts File
-      ansible.builtin.copy:
-        src: /etc/hosts
-        dest: /etc/hosts
+    # Open HTTP Service then Reload the Firewall
+    - name: Open HTTP Service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
 
     # Ensure Config Changes are Applied and Nginx is Started and Starts on Boot
     - name: Restart and Enable Nginx
