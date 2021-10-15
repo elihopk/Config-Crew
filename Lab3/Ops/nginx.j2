@@ -11,9 +11,15 @@ events {
 
 
 http {
-    upstream backend {
+    upstream calWeb {
         {% for host in groups['prod'] %}
         server {{hostvars[host]['ansible_host']}};
         {% endfor %}
+    }
+
+    server {
+        location / {
+            proxy_pass http://calWeb;
+        }
     }
 }
