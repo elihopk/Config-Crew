@@ -28,3 +28,15 @@
       ansible.builtin.yum_repository:
         name: nginx
         state: absent
+
+    # Close HTTP Service then Reload the Firewall
+    - name: Close HTTP Service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: disabled
+
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
