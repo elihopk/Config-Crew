@@ -4,25 +4,24 @@
 # Config Crew Ops Team Monitor Server Setup Playbook #
 ######################################################
 
+# Usage: ansible-playbook loadbalancer_uninstall
+
 - name: Setup Loadbalancer
   hosts: loadbalancer
   remote_user: root
 
   tasks:
+    # Uninstalls Nginx from the Loadbalancer
     - name: Remove Nginx
       ansible.builtin.yum:
         name: nginx
         state: absent
 
+    # Delete any Remaining Nginx Config Files
     - name: Remove Nginx Config
       ansible.builtin.file:
         name: /etc/nginx
         state: absent
-    
-    # - name: Remove User
-    #   ansible.builtin.user:
-    #     name: www-data
-    #     state: absent
 
     # Remove the Nginx yum Repository
     - name: Remove Repository

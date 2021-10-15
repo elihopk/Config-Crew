@@ -4,6 +4,8 @@
 # Config Crew Ops Team Monitor Server Setup Playbook #
 ######################################################
 
+# Usage: ansible-playbook loadbalancer_setup.yml
+
 - name: Setup Loadbalancer
   hosts: loadbalancer
   remote_user: root
@@ -18,43 +20,28 @@
         # Trust Packages Downloaded from this Repo Automatically
         gpgcheck: no
 
+    # Install Nginx on the Loadbalancer
     - name: Install Nginx
       ansible.builtin.yum:
         name: nginx
         state: latest
     
+    # Write nginx.conf J2 Template to Set Up Loadbalancing
     - name: Write the Nginx Config File
       ansible.builtin.template:
         src: nginx.j2
         dest: /etc/nginx/nginx.conf
 
+    # Overwrite Loadbalancer Hosts File to that of the Local Machine
+    # This is to Allow the Hostnames Pulled from Ansible's Inventory for Web Servers to Function Correctly
     - name: Write Hosts File
       ansible.builtin.copy:
         src: /etc/hosts
         dest: /etc/hosts
 
-    # - name: Create User
-    #   ansible.builtin.user:
-    #     name: www-data
-    #     state: present
-
-    # - name: Create Logs Dir
-    #   ansible.builtin.file:
-    #     name: /etc/nginx/logs
-    #     state: directory
-    #     owner: www-data
-    #     group: www-data
-    #     mode: 0755
-        
-    # - name: Create Error Logs
-    #   ansible.builtin.file:
-    #     name: /etc/nginx/logs/error.log
-    #     state: touch
-    #     owner: www-data
-    #     group: www-data
-    #     mode: 0755
-
-    - name: Restart Nginx
+    # Ensure Config Changes are Applied and Nginx is Started and Starts on Boot
+    - name: Restart and Enable Nginx
       ansible.builtin.systemd:
         name: nginx
         state: restarted
+        enabled: yes
