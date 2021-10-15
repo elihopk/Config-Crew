@@ -1,0 +1,45 @@
+---
+
+######################################################
+# Config Crew Ops Team Monitor Server Setup Playbook #
+######################################################
+
+# Usage: ansible-playbook Lab3SecTest.yml
+
+- name: Lab 3 Sec Test
+  hosts: prod
+  remote_user: root
+
+  tasks:
+    - name: Run Lab 1 Sec Test Script
+      ansible.builtin.script:
+        cmd: Lab3SecTest.yml
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Run Modified Lab 2 Load Test, Expected Load
+      delegate_to: localhost
+      ansible.builtin.expect:
+        command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
+        responses:
+          "Please enter IP Address to Test:": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          "Please select a load": 
+            - "E"
+            - "Q"
+      register: expectedOut
+
+    - debug: var=expectedOut.stdout_lines[-14:-2]
+
+    - name: Run Modified Lab 2 Load Test, Overload
+      delegate_to: localhost
+      ansible.builtin.expect:
+        command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
+        responses:
+          "Please enter IP Address to Test:": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          "Please select a load": 
+            - "O"
+            - "Q"
+      register: overloadOut
+
+    - debug: var=overloadOut.stdout_lines[-14:-2]
