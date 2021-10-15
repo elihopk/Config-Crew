@@ -1,0 +1,26 @@
+---
+
+######################################################
+# Config Crew Ops Team Monitor Server Setup Playbook #
+######################################################
+
+- name: Setup Loadbalancer
+  hosts: loadbalancer
+  remote_user: root
+
+  tasks:
+    # Add the Nginx yum Repository
+    - name: Add Repository
+      ansible.builtin.yum_repository:
+        name: nginx
+        description: Nginx Repo
+        baseurl: https://nginx.org/packages/centos/7Server/x86_64/
+        # Trust Packages Downloaded from this Repo Automatically
+        gpgcheck: no
+
+    - name: Install Nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: latest
+    
+    

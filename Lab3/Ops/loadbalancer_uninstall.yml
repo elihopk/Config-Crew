@@ -1,0 +1,23 @@
+---
+
+######################################################
+# Config Crew Ops Team Monitor Server Setup Playbook #
+######################################################
+
+- name: Setup Loadbalancer
+  hosts: loadbalancer
+  remote_user: root
+
+  tasks:
+    - name: Remove Nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: absent
+
+    # Remove the Nginx yum Repository
+    - name: Remove Repository
+      ansible.builtin.yum_repository:
+        name: nginx
+        state: absent
+    
+    
