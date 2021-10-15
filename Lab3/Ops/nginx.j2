@@ -1,11 +1,13 @@
 daemon            off;
-worker_processes  2;
+worker_processes  1;
 user              root;
 
 events {
     use           epoll;
-    worker_connections  128;
+    worker_connections  1024;
 }
+
+error_log          logs/error.log;
 
 http {
     upstream backend {
