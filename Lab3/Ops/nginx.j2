@@ -1,3 +1,14 @@
+daemon            off;
+worker_processes  2;
+user              www-data;
+
+events {
+    use           epoll;
+    worker_connections  128;
+}
+
+error_log         logs/error.log info;
+
 http {
     upstream backend {
         {% for host in groups['prod'] %}
