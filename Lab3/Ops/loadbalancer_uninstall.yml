@@ -14,10 +14,13 @@
         name: nginx
         state: absent
 
+    - name: Remove Nginx Config
+      ansible.builtin.file:
+        name: /etc/nginx
+        state: absent
+
     # Remove the Nginx yum Repository
     - name: Remove Repository
       ansible.builtin.yum_repository:
         name: nginx
         state: absent
-    
-    

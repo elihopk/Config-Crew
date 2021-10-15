@@ -23,4 +23,17 @@
         name: nginx
         state: latest
     
-    
+    - name: Write the Nginx Config File
+      ansible.builtin.template:
+        src: nginx.j2
+        dest: /etc/nginx/nginx.conf
+
+    - name: Write Hosts File
+      ansible.builtin.copy:
+        src: /etc/hosts
+        dest: /etc/hosts
+        
+    - name: Restart Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted

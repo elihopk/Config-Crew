@@ -1,0 +1,7 @@
+http {
+    upstream backend {
+        {% for host in groups['prod'] %}
+        server {{host}};
+        {% endfor %}
+    }
+}
