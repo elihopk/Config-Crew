@@ -6,7 +6,7 @@
 
 # Usage: ansible-playbook loadbalancer_uninstall
 
-- name: Setup Loadbalancer
+- name: Uninstall Loadbalancer
   hosts: loadbalancer
   remote_user: root
 
