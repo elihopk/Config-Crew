@@ -33,21 +33,16 @@
         src: /etc/hosts
         dest: /etc/hosts
 
-    - name: Create User
-      ansible.builtin.user:
-        name: www
-        state: present
-
     - name: Create Logs Dir
       ansible.builtin.file:
         name: /etc/nginx/logs
         state: directory
-        owner: www
         
     - name: Create Error Logs
       ansible.builtin.file:
         name: /etc/nginx/logs/error.log
         state: touch
+        mode: 0666
 
     - name: Restart Nginx
       ansible.builtin.systemd:
