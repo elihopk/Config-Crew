@@ -153,7 +153,7 @@ ListenPort=10050
 # Default:
 # ServerActive=
 
-ServerActive={{ monitor_server }}:10051
+ServerActive={{ hostvars[groups['monitorServer'][0]]['ansible_host'] }}:10051
 
 ### Option: Hostname
 #	List of comma delimited unique, case sensitive hostnames.

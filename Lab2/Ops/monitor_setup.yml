@@ -148,24 +148,25 @@
         - php-fpm
         - httpd
 
-    # Add calWebProd Agent to Zabbix
+    # Add All Monitored Agents to Zabbix
     - name: Add Zabbix Agent
       local_action:
         module: community.zabbix.zabbix_host
-        server_url: http://{{ inventory_hostname }}/zabbix
+        server_url: http://{{ hostvars[inventory_hostname]['ansible_host'] }}/zabbix
         login_user: Admin
         login_password: zabbix
-        host_name: calWebProd
-        visible_name: calWebProd
+        host_name: "{{ item }}"
+        visible_name: "{{ item }}"
         host_groups:
           - Linux servers
         interfaces:
           - type: '1'
             main: 1
             useip: 1
-            ip: 192.168.1.1
+            ip: "{{ hostvars[item]['ansible_host'] }}"
         link_templates:
           - Apache by Zabbix agent
           - HTTP Service
           - ICMP Ping
           - Linux by Zabbix agent
+      loop: "{{ groups['monitored'] }}"
