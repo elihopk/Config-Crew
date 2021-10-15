@@ -37,6 +37,7 @@
       ansible.builtin.file:
         name: /etc/nginx/logs
         state: directory
+        mode: 0666
         
     - name: Create Error Logs
       ansible.builtin.file:
