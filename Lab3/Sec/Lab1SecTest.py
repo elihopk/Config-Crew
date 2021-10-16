@@ -64,7 +64,7 @@ print('Checking opened firewall services...')
 services = os.popen('firewall-cmd --list-services').read().split()
 badservice = False
 for i in services:
-   if i not in ['dhcpv6-client', 'http', 'https', 'ssh']:
+   if i not in ['dhcpv6-client', 'http', 'https', 'ssh', 'zabbix-agent']:
       print('WARNING: Service ' + i + ' is open but should not be')
       badservice = True
       break
