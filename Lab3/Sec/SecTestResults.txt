@@ -1,0 +1,198 @@
+
+PLAY [Lab 3 Sec Test] **********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [calWeb1]
+ok: [calWeb3]
+ok: [calWeb2]
+
+TASK [Copy Lab 1 Sec Test Script] **********************************************
+ok: [calWeb3]
+ok: [calWeb1]
+ok: [calWeb2]
+
+TASK [Run Lab 1 Sec Test Script] ***********************************************
+changed: [calWeb2]
+changed: [calWeb1]
+changed: [calWeb3]
+
+TASK [Print Lab 1 Sec Test Script Output] **************************************
+ok: [calWeb1] => {
+    "output.stdout_lines": [
+        "Percentage of the requests served within a certain time (ms)",
+        "  50%     36",
+        "  66%     49",
+        "  75%     87",
+        "  80%    226",
+        "  90%    253",
+        "  95%   1036",
+        "  98%   1054",
+        "  99%   1080",
+        " 100%  21026 (longest request)",
+        "Testing Apache Policies",
+        "Enabled Modules:  45",
+        "Disabled Modules: 17",
+        "All packages are up to date",
+        "Starting benchmarking... Data is for 50000 requests with 1000 concurrently.",
+        "Checking opened firewall services...",
+        "No bad services were enabled on the firewall"
+    ]
+}
+ok: [calWeb2] => {
+    "output.stdout_lines": [
+        "Percentage of the requests served within a certain time (ms)",
+        "  50%     28",
+        "  66%     40",
+        "  75%     72",
+        "  80%    222",
+        "  90%    239",
+        "  95%   1036",
+        "  98%   1053",
+        "  99%   1221",
+        " 100%  21024 (longest request)",
+        "Testing Apache Policies",
+        "Enabled Modules:  45",
+        "Disabled Modules: 17",
+        "All packages are up to date",
+        "Starting benchmarking... Data is for 50000 requests with 1000 concurrently.",
+        "Checking opened firewall services...",
+        "No bad services were enabled on the firewall"
+    ]
+}
+ok: [calWeb3] => {
+    "output.stdout_lines": [
+        "Percentage of the requests served within a certain time (ms)",
+        "  50%     41",
+        "  66%     55",
+        "  75%     87",
+        "  80%    227",
+        "  90%    289",
+        "  95%   1044",
+        "  98%   1072",
+        "  99%   1144",
+        " 100%  23017 (longest request)",
+        "Testing Apache Policies",
+        "Enabled Modules:  45",
+        "Disabled Modules: 17",
+        "All packages are up to date",
+        "Starting benchmarking... Data is for 50000 requests with 1000 concurrently.",
+        "Checking opened firewall services...",
+        "No bad services were enabled on the firewall"
+    ]
+}
+
+TASK [Run Modified Lab 2 Load Test Expected Load] ******************************
+changed: [calWeb3 -> localhost]
+changed: [calWeb1 -> localhost]
+changed: [calWeb2 -> localhost]
+
+TASK [Print Lab 2 Load Test Expected Load Output] ******************************
+ok: [calWeb1] => {
+    "expectedout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t       30382 hits",
+        "Availability:\t\t       95.81 %",
+        "Elapsed time:\t\t      247.70 secs",
+        "Data transferred:\t      818.09 MB",
+        "Response time:\t\t        0.73 secs",
+        "Transaction rate:\t      122.66 trans/sec",
+        "Throughput:\t\t        3.30 MB/sec",
+        "Concurrency:\t\t       89.98",
+        "Successful transactions:       30382",
+        "Failed transactions:\t        1328",
+        "Longest transaction:\t      120.05",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+ok: [calWeb2] => {
+    "expectedout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t       30467 hits",
+        "Availability:\t\t       96.03 %",
+        "Elapsed time:\t\t      401.83 secs",
+        "Data transferred:\t      821.98 MB",
+        "Response time:\t\t        0.80 secs",
+        "Transaction rate:\t       75.82 trans/sec",
+        "Throughput:\t\t        2.05 MB/sec",
+        "Concurrency:\t\t       60.54",
+        "Successful transactions:       30467",
+        "Failed transactions:\t        1260",
+        "Longest transaction:\t      209.59",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+ok: [calWeb3] => {
+    "expectedout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t       30294 hits",
+        "Availability:\t\t       95.83 %",
+        "Elapsed time:\t\t      212.52 secs",
+        "Data transferred:\t      816.41 MB",
+        "Response time:\t\t        0.77 secs",
+        "Transaction rate:\t      142.55 trans/sec",
+        "Throughput:\t\t        3.84 MB/sec",
+        "Concurrency:\t\t      109.32",
+        "Successful transactions:       30294",
+        "Failed transactions:\t        1317",
+        "Longest transaction:\t      120.05",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+
+TASK [Run Modified Lab 2 Load Test Overload] ***********************************
+changed: [calWeb3 -> localhost]
+changed: [calWeb2 -> localhost]
+changed: [calWeb1 -> localhost]
+
+TASK [Print Lab 2 Load Test Overload Output] ***********************************
+ok: [calWeb1] => {
+    "overloadout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t           0 hits",
+        "Availability:\t\t        0.00 %",
+        "Elapsed time:\t\t        6.18 secs",
+        "Data transferred:\t        0.15 MB",
+        "Response time:\t\t        0.00 secs",
+        "Transaction rate:\t        0.00 trans/sec",
+        "Throughput:\t\t        0.02 MB/sec",
+        "Concurrency:\t\t       11.97",
+        "Successful transactions:           0",
+        "Failed transactions:\t        1027",
+        "Longest transaction:\t        6.18",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+ok: [calWeb2] => {
+    "overloadout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t           0 hits",
+        "Availability:\t\t        0.00 %",
+        "Elapsed time:\t\t        5.39 secs",
+        "Data transferred:\t        0.15 MB",
+        "Response time:\t\t        0.00 secs",
+        "Transaction rate:\t        0.00 trans/sec",
+        "Throughput:\t\t        0.03 MB/sec",
+        "Concurrency:\t\t        8.44",
+        "Successful transactions:           0",
+        "Failed transactions:\t        1028",
+        "Longest transaction:\t        0.15",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+ok: [calWeb3] => {
+    "overloadout.stdout_lines[-14:-2]": [
+        "Transactions:\t\t           0 hits",
+        "Availability:\t\t        0.00 %",
+        "Elapsed time:\t\t        5.23 secs",
+        "Data transferred:\t        0.15 MB",
+        "Response time:\t\t        0.00 secs",
+        "Transaction rate:\t        0.00 trans/sec",
+        "Throughput:\t\t        0.03 MB/sec",
+        "Concurrency:\t\t       10.86",
+        "Successful transactions:           0",
+        "Failed transactions:\t        1026",
+        "Longest transaction:\t        0.21",
+        "Shortest transaction:\t        0.00"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+calWeb1                    : ok=8    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+calWeb2                    : ok=8    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+calWeb3                    : ok=8    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
