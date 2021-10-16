@@ -17,7 +17,7 @@ if ( os.system('grep -i  "LimitRequestBody" '+config+' > /dev/null' ) != 0):
 if ( os.system('grep -i "HttpOnly;Secure" '+config+' > /dev/null') !=0):
     print('WARNING: HTTP Only and Secure Flags not on')
     sys.exit()
-if ( os.system('grep -A1 -i "\"\^\(TRACE\|OPTIONS\|CONNECT\|PUT\|DELETE\)\" /var/www/html/.htaccess > /dev/null') !=0):
+if ( os.system('grep -A1 -i "\^\(TRACE\|OPTIONS\|CONNECT\|PUT\|DELETE\)" /var/www/html/.htaccess > /dev/null') !=0):
     print('WARNING: Methods not disabled')
     sys.exit()
 if ( os.system('grep -i "FileETag None" /var/www/html/.htaccess > /dev/null') !=0):
