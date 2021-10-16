@@ -11,13 +11,13 @@
   remote_user: root
 
   tasks:
-    - name: Run Lab 1 Sec Test Script
-      ansible.builtin.script:
-        cmd: Lab3SecTest.yml
-      register: output
+    # - name: Run Lab 1 Sec Test Script
+    #   ansible.builtin.script:
+    #     cmd: Lab3SecTest.yml
+    #   register: output
 
-    - name: Print Lab 1 Sec Test Script Output
-      debug: var=output.stdout_lines
+    # - name: Print Lab 1 Sec Test Script Output
+    #   debug: var=output.stdout_lines
 
     - name: Run Modified Lab 2 Load Test Expected Load
       delegate_to: localhost
