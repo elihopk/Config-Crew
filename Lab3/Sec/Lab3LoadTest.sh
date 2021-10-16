@@ -35,22 +35,22 @@ do
     # MINIMAL LOAD: Run Siege with 50 Concurrent Users, 100 Reps
     if [[ ${choice^^} == "M" ]]
     then
-        printf "Running Siege with \e[31m50\e[0m Concurrent Users, \e[35m15\e[0m Repetitions, and Under \e[34m5\e[0m Second Delay..."
+        printf "Running Siege with \e[31m50\e[0m Concurrent Users, \e[35m15\e[0m Repetitions, and Under \e[34m3\e[0m Second Delay..."
         sleep 3
-	siege -c 50 -r 15 -d 5 $IP
+	siege -c 200 -r 15 -d 3 $IP
     # EXPECTED LOAD: Run Siege with 100 Concurrent Users, 100 Reps
     elif [[ ${choice^^} == "E" ]]
     then
-        printf "Running Siege with \e[31m100\e[0m Concurrent Users, \e[35m15\e[0m Repetitions, and Under \e[34m5\e[0m Second Delay..."
+        printf "Running Siege with \e[31m300\e[0m Concurrent Users, \e[35m15\e[0m Repetitions, and Under \e[34m3\e[0m Second Delay..."
         sleep 3
-	siege -c 100 -r 15 -d 5 $IP
+	siege -c 300 -r 15 -d 3 $IP
     # Less Reps for Overload to Keep Script from Taking too Long
     # OVER LOAD: Run Siege with 500 Concurrent Users, 50 Reps
     elif [[ ${choice^^} == "O" ]]
     then
-        printf "Running Siege with \e[31m255\e[0m Concurrent Users, \e[35m5\e[0m Repetitions, and Under \e[34m5\e[0m Second Delay..."
+        printf "Running Siege with \e[31m500\e[0m Concurrent Users, \e[35m10\e[0m Repetitions, and Under \e[34m3\e[0m Second Delay..."
         sleep 3
-	siege -c 255 -r 10 -d 5 $IP
+	siege -c 500 -r 10 -d 3 $IP
     # User Entered Invalid Code
     else
         echo "Invalid Load Choice!"
