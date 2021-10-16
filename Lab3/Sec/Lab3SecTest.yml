@@ -23,8 +23,8 @@
       ansible.builtin.expect:
         command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
         responses:
-          "Please enter IP Address to Test:": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
-          "Please select a load": 
+          Please enter IP Address to Test: "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          Please select a load: 
             - "E"
             - "Q"
       register: expectedOut
@@ -36,8 +36,8 @@
       ansible.builtin.expect:
         command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
         responses:
-          "Please enter IP Address to Test:": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
-          "Please select a load": 
+          Please enter IP Address to Test: "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          Please select a load: 
             - "O"
             - "Q"
       register: overloadOut
