@@ -8,7 +8,7 @@ print("Testing Apache Policies")
 if ( os.system('grep -i "ServerSignature Off" '+config+' > /dev/null' ) != 0 ) and ( os.system('grep -i "ServerTokens Prod" '+config+' > /dev/null')  != 0 ):
     print('WARNING: Apache Version Not Hidden')
     sys.exit()
-if ( os.system('grep -i "Options -Indexes" '+config+' > /dev/null' ) != 0 ):
+if ( os.system('grep -i "Options FollowSymLinks" '+config+' > /dev/null' ) != 0 ):
     print('WARNING: Directory Listing not Disabled')
     sys.exit()    
 if ( os.system('grep -i  "LimitRequestBody" '+config+' > /dev/null' ) != 0):
