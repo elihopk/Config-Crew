@@ -1,34 +1,35 @@
+[student@calAdmin Sec]$ ansible-playbook Lab3SecTest.yml
 
 PLAY [Lab 3 Sec Test] **********************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [calWeb1]
 ok: [calWeb3]
+ok: [calWeb1]
 ok: [calWeb2]
 
 TASK [Copy Lab 1 Sec Test Script] **********************************************
 ok: [calWeb3]
-ok: [calWeb1]
 ok: [calWeb2]
+ok: [calWeb1]
 
 TASK [Run Lab 1 Sec Test Script] ***********************************************
-changed: [calWeb2]
 changed: [calWeb1]
+changed: [calWeb2]
 changed: [calWeb3]
 
 TASK [Print Lab 1 Sec Test Script Output] **************************************
 ok: [calWeb1] => {
     "output.stdout_lines": [
         "Percentage of the requests served within a certain time (ms)",
-        "  50%     36",
-        "  66%     49",
-        "  75%     87",
-        "  80%    226",
-        "  90%    253",
-        "  95%   1036",
-        "  98%   1054",
-        "  99%   1080",
-        " 100%  21026 (longest request)",
+        "  50%    142",
+        "  66%    179",
+        "  75%    239",
+        "  80%    294",
+        "  90%   1052",
+        "  95%   1132",
+        "  98%   1186",
+        "  99%   1376",
+        " 100%   3570 (longest request)",
         "Testing Apache Policies",
         "Enabled Modules:  45",
         "Disabled Modules: 17",
@@ -41,15 +42,15 @@ ok: [calWeb1] => {
 ok: [calWeb2] => {
     "output.stdout_lines": [
         "Percentage of the requests served within a certain time (ms)",
-        "  50%     28",
-        "  66%     40",
-        "  75%     72",
-        "  80%    222",
-        "  90%    239",
-        "  95%   1036",
-        "  98%   1053",
-        "  99%   1221",
-        " 100%  21024 (longest request)",
+        "  50%     23",
+        "  66%     33",
+        "  75%     54",
+        "  80%    219",
+        "  90%    230",
+        "  95%   1018",
+        "  98%   1049",
+        "  99%   3024",
+        " 100%  23031 (longest request)",
         "Testing Apache Policies",
         "Enabled Modules:  45",
         "Disabled Modules: 17",
@@ -62,15 +63,15 @@ ok: [calWeb2] => {
 ok: [calWeb3] => {
     "output.stdout_lines": [
         "Percentage of the requests served within a certain time (ms)",
-        "  50%     41",
-        "  66%     55",
-        "  75%     87",
-        "  80%    227",
-        "  90%    289",
-        "  95%   1044",
-        "  98%   1072",
-        "  99%   1144",
-        " 100%  23017 (longest request)",
+        "  50%     51",
+        "  66%     78",
+        "  75%    105",
+        "  80%    231",
+        "  90%    465",
+        "  95%   1053",
+        "  98%   1088",
+        "  99%   1271",
+        " 100%  21021 (longest request)",
         "Testing Apache Policies",
         "Enabled Modules:  45",
         "Disabled Modules: 17",
@@ -83,110 +84,110 @@ ok: [calWeb3] => {
 
 TASK [Run Modified Lab 2 Load Test Expected Load] ******************************
 changed: [calWeb3 -> localhost]
-changed: [calWeb1 -> localhost]
 changed: [calWeb2 -> localhost]
+changed: [calWeb1 -> localhost]
 
 TASK [Print Lab 2 Load Test Expected Load Output] ******************************
 ok: [calWeb1] => {
     "expectedout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t       30382 hits",
-        "Availability:\t\t       95.81 %",
-        "Elapsed time:\t\t      247.70 secs",
-        "Data transferred:\t      818.09 MB",
-        "Response time:\t\t        0.73 secs",
-        "Transaction rate:\t      122.66 trans/sec",
-        "Throughput:\t\t        3.30 MB/sec",
-        "Concurrency:\t\t       89.98",
-        "Successful transactions:       30382",
-        "Failed transactions:\t        1328",
-        "Longest transaction:\t      120.05",
+        "Transactions:\t\t       40500 hits",
+        "Availability:\t\t      100.00 %",
+        "Elapsed time:\t\t       76.05 secs",
+        "Data transferred:\t     1107.68 MB",
+        "Response time:\t\t        0.06 secs",
+        "Transaction rate:\t      532.54 trans/sec",
+        "Throughput:\t\t       14.57 MB/sec",
+        "Concurrency:\t\t       33.51",
+        "Successful transactions:       40500",
+        "Failed transactions:\t           0",
+        "Longest transaction:\t        2.64",
         "Shortest transaction:\t        0.00"
     ]
 }
 ok: [calWeb2] => {
     "expectedout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t       30467 hits",
-        "Availability:\t\t       96.03 %",
-        "Elapsed time:\t\t      401.83 secs",
-        "Data transferred:\t      821.98 MB",
-        "Response time:\t\t        0.80 secs",
-        "Transaction rate:\t       75.82 trans/sec",
-        "Throughput:\t\t        2.05 MB/sec",
-        "Concurrency:\t\t       60.54",
-        "Successful transactions:       30467",
-        "Failed transactions:\t        1260",
-        "Longest transaction:\t      209.59",
+        "Transactions:\t\t       40500 hits",
+        "Availability:\t\t      100.00 %",
+        "Elapsed time:\t\t       76.50 secs",
+        "Data transferred:\t     1107.68 MB",
+        "Response time:\t\t        0.06 secs",
+        "Transaction rate:\t      529.41 trans/sec",
+        "Throughput:\t\t       14.48 MB/sec",
+        "Concurrency:\t\t       33.79",
+        "Successful transactions:       40500",
+        "Failed transactions:\t           0",
+        "Longest transaction:\t        3.05",
         "Shortest transaction:\t        0.00"
     ]
 }
 ok: [calWeb3] => {
     "expectedout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t       30294 hits",
-        "Availability:\t\t       95.83 %",
-        "Elapsed time:\t\t      212.52 secs",
-        "Data transferred:\t      816.41 MB",
-        "Response time:\t\t        0.77 secs",
-        "Transaction rate:\t      142.55 trans/sec",
-        "Throughput:\t\t        3.84 MB/sec",
-        "Concurrency:\t\t      109.32",
-        "Successful transactions:       30294",
-        "Failed transactions:\t        1317",
-        "Longest transaction:\t      120.05",
+        "Transactions:\t\t       40428 hits",
+        "Availability:\t\t       99.98 %",
+        "Elapsed time:\t\t       75.15 secs",
+        "Data transferred:\t     1105.72 MB",
+        "Response time:\t\t        0.06 secs",
+        "Transaction rate:\t      537.96 trans/sec",
+        "Throughput:\t\t       14.71 MB/sec",
+        "Concurrency:\t\t       32.19",
+        "Successful transactions:       40428",
+        "Failed transactions:\t           8",
+        "Longest transaction:\t        3.06",
         "Shortest transaction:\t        0.00"
     ]
 }
 
 TASK [Run Modified Lab 2 Load Test Overload] ***********************************
-changed: [calWeb3 -> localhost]
-changed: [calWeb2 -> localhost]
 changed: [calWeb1 -> localhost]
+changed: [calWeb2 -> localhost]
+changed: [calWeb3 -> localhost]
 
 TASK [Print Lab 2 Load Test Overload Output] ***********************************
 ok: [calWeb1] => {
     "overloadout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t           0 hits",
-        "Availability:\t\t        0.00 %",
-        "Elapsed time:\t\t        6.18 secs",
-        "Data transferred:\t        0.15 MB",
-        "Response time:\t\t        0.00 secs",
-        "Transaction rate:\t        0.00 trans/sec",
-        "Throughput:\t\t        0.02 MB/sec",
-        "Concurrency:\t\t       11.97",
-        "Successful transactions:           0",
-        "Failed transactions:\t        1027",
-        "Longest transaction:\t        6.18",
+        "Transactions:\t\t       45000 hits",
+        "Availability:\t\t      100.00 %",
+        "Elapsed time:\t\t       87.95 secs",
+        "Data transferred:\t     1230.76 MB",
+        "Response time:\t\t        0.11 secs",
+        "Transaction rate:\t      511.65 trans/sec",
+        "Throughput:\t\t       13.99 MB/sec",
+        "Concurrency:\t\t       56.44",
+        "Successful transactions:       45000",
+        "Failed transactions:\t           0",
+        "Longest transaction:\t        9.99",
         "Shortest transaction:\t        0.00"
     ]
 }
 ok: [calWeb2] => {
     "overloadout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t           0 hits",
-        "Availability:\t\t        0.00 %",
-        "Elapsed time:\t\t        5.39 secs",
-        "Data transferred:\t        0.15 MB",
-        "Response time:\t\t        0.00 secs",
-        "Transaction rate:\t        0.00 trans/sec",
-        "Throughput:\t\t        0.03 MB/sec",
-        "Concurrency:\t\t        8.44",
-        "Successful transactions:           0",
-        "Failed transactions:\t        1028",
-        "Longest transaction:\t        0.15",
+        "Transactions:\t\t       45000 hits",
+        "Availability:\t\t      100.00 %",
+        "Elapsed time:\t\t       87.14 secs",
+        "Data transferred:\t     1230.76 MB",
+        "Response time:\t\t        0.11 secs",
+        "Transaction rate:\t      516.41 trans/sec",
+        "Throughput:\t\t       14.12 MB/sec",
+        "Concurrency:\t\t       54.79",
+        "Successful transactions:       45000",
+        "Failed transactions:\t           0",
+        "Longest transaction:\t       10.59",
         "Shortest transaction:\t        0.00"
     ]
 }
 ok: [calWeb3] => {
     "overloadout.stdout_lines[-14:-2]": [
-        "Transactions:\t\t           0 hits",
-        "Availability:\t\t        0.00 %",
-        "Elapsed time:\t\t        5.23 secs",
-        "Data transferred:\t        0.15 MB",
-        "Response time:\t\t        0.00 secs",
-        "Transaction rate:\t        0.00 trans/sec",
-        "Throughput:\t\t        0.03 MB/sec",
-        "Concurrency:\t\t       10.86",
-        "Successful transactions:           0",
-        "Failed transactions:\t        1026",
-        "Longest transaction:\t        0.21",
+        "Transactions:\t\t       45000 hits",
+        "Availability:\t\t      100.00 %",
+        "Elapsed time:\t\t       88.25 secs",
+        "Data transferred:\t     1230.76 MB",
+        "Response time:\t\t        0.10 secs",
+        "Transaction rate:\t      509.92 trans/sec",
+        "Throughput:\t\t       13.95 MB/sec",
+        "Concurrency:\t\t       52.82",
+        "Successful transactions:       45000",
+        "Failed transactions:\t           0",
+        "Longest transaction:\t       10.39",
         "Shortest transaction:\t        0.00"
     ]
 }
