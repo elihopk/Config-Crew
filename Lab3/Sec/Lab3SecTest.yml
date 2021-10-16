@@ -11,14 +11,7 @@
   remote_user: root
 
   tasks:
-    # - name: Run Lab 1 Sec Test Script
-    #   ansible.builtin.script:
-    #     cmd: Lab3SecTest.yml
-    #   register: output
-
-    # - name: Print Lab 1 Sec Test Script Output
-    #   debug: var=output.stdout_lines
-
+    # Copy, Run, and Print Lab 1 Sec Test
     - name: Copy Lab 1 Sec Test Script
       ansible.builtin.copy:
         src: Lab1SecTest.py
@@ -31,6 +24,7 @@
     - name: Print Lab 1 Sec Test Script Output
       debug: var=output.stdout_lines
 
+    # Run and Print Lab 2 Expected Load
     - name: Run Modified Lab 2 Load Test Expected Load
       delegate_to: localhost
       ansible.builtin.expect:
@@ -46,6 +40,7 @@
     - name: Print Lab 2 Load Test Expected Load Output
       debug: var=expectedout.stdout_lines[-14:-2]
 
+    # Run and Print Lab 2 Overload
     - name: Run Modified Lab 2 Load Test Overload
       delegate_to: localhost
       ansible.builtin.expect:

@@ -1,8 +1,8 @@
 ---
 
-######################################################
-# Config Crew Ops Team Monitor Server Setup Playbook #
-######################################################
+###############################################################
+# Config Crew Ops Team Loadbalancer Server Uninstall Playbook #
+###############################################################
 
 # Usage: ansible-playbook loadbalancer_uninstall
 
