@@ -19,6 +19,18 @@
     # - name: Print Lab 1 Sec Test Script Output
     #   debug: var=output.stdout_lines
 
+    - name: Copy Lab 1 Sec Test Script
+      ansible.builtin.copy:
+        src: Lab1SecTest.py
+        dest: /root/Lab1SecTest.py
+
+    - name: Run Lab 1 Sec Test Script
+      ansible.builtin.shell: python /root/Lab1SecTest.py
+      register: output
+
+    - name: Print Lab 1 Sec Test Script Output
+      debug: var=output.stdout_lines
+
     - name: Run Modified Lab 2 Load Test Expected Load
       delegate_to: localhost
       ansible.builtin.expect:
