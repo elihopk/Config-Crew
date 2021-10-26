@@ -8,6 +8,6 @@
   tasks:
 
   - name: Remove nginx
-    ansible.builtin.dnf:
+    ansible.builtin.yum:
       name: nginx
       state: removed
