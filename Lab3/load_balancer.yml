@@ -1,7 +1,8 @@
 ####################################
 ### LOAD BALANCER INSTALL SCRIPT ###
 ####################################
----
+#requires ansible.posix
+
 - name: Set Up Load Balancer
   hosts: loadbalancer
   remote_user: root
