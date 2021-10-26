@@ -6,11 +6,13 @@
   hosts: loadbalancer
   remote_user: root
   tasks:
-  - name: Install nginx
+  - name: Install nginx repo
     ansible.builtin.yum_repository:
       name: nginx
+      description: nginx repo
       baseurl: https://nginx.org/packages/centos/7Server/x86_64/
       gpgcheck: no
+  - name: Install nginx
     ansible.builtin.yum:
       name: nginx
       state: latest
