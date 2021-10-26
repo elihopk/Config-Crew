@@ -3,7 +3,7 @@
 ######################################
 ---
 - name: Set Up Load Balancer
-  hosts: loadBalancer
+  hosts: loadbalancer
   remote_user: root
   tasks:
 
