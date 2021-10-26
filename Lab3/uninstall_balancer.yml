@@ -1,0 +1,13 @@
+######################################
+### LOAD BALANCER UNINSTALL SCRIPT ###
+######################################
+---
+- name: Set Up Load Balancer
+  hosts: loadBalancer
+  remote_user: root
+  tasks:
+
+  - name: Remove nginx
+    ansible.builtin.yum:
+      name: nginx
+      state: removed
