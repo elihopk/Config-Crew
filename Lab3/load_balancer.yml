@@ -16,6 +16,11 @@
     ansible.builtin.yum:
       name: nginx
       state: latest
+  - name: open http port
+    ansible.posix.firewalld:
+       service: http
+       permanent: yes
+       state: enabled
   - name: Enable/Start nignx
     ansible.builtin.systemd:
       name: nginx
