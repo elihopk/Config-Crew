@@ -14,4 +14,4 @@
     ansible.builtin.yum_repository:
       name: nginx
       state: absent
-      notify: yum-clean-metadata
+    ansible.builtin.notify: yum-clean-metadata
