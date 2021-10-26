@@ -21,6 +21,7 @@
     ansible.posix.firewalld:
        service: http
        permanent: yes
+       immediate: yes
        state: enabled
   - name: Enable/Start nignx
     ansible.builtin.systemd:
