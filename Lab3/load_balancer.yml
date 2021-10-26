@@ -6,8 +6,6 @@
   hosts: loadBalancer
   remote_user: root
   tasks:
-  - name: Install python2
-
   - name: Install nginx
     ansible.builtin.yum_repository:
       name: nginx
