@@ -8,7 +8,7 @@
   tasks:
 
   - name: Install nginx
-    ansible.builtin.yum:
+    ansible.builtin.dnf:
       name: nginx
       state: latest
   - name: Enable/Start nignx
