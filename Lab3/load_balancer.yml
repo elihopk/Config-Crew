@@ -6,9 +6,14 @@
   hosts: loadBalancer
   remote_user: root
   tasks:
+  - name: Install python2
 
   - name: Install nginx
-    ansible.builtin.dnf:
+    ansible.builtin.yum_repository:
+      name: nginx
+      baseurl: https://nginx.org/packages/centos/7Server/x86_64/
+      gpgcheck: no
+    ansible.builtin.yum:
       name: nginx
       state: latest
   - name: Enable/Start nignx
