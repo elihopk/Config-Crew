@@ -6,8 +6,12 @@
   hosts: loadbalancer
   remote_user: root
   tasks:
-
   - name: Remove nginx
     ansible.builtin.yum:
       name: nginx
       state: removed
+  - name: remove repo
+    ansible.builtin.yum_repository:
+      name: nginx
+      state: absent
+      notify: yum-clean-metadata
