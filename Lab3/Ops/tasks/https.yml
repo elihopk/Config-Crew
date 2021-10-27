@@ -4,7 +4,7 @@
     state: latest
 - name: install cryptography
   ansible.builtin.yum:
-    name: cryptography
+    name: python-crypto
     state: latest
 - name: set up ssl directories
   ansible.builtin.file:
