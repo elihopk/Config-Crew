@@ -1,9 +1,9 @@
 http {
     upstream calWeb {
         least_conn;
-        server 192.168.10.2;
-        server 192.168.10.3;
-        server 192.168.10.4;
+        {% for host in groups[{{groupName}}] %}
+        {{ item }}
+        {% endfor %}
     }
 
     server {
