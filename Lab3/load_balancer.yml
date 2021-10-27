@@ -28,3 +28,6 @@
     name: nginx
     enabled: yes
     state: restarted
+- name: Reload nginx
+  ansible.builtin.shell:
+    cmd: nginx -s reload
