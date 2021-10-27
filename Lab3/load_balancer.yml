@@ -4,8 +4,6 @@
 #requires ansible.posix
 
 - name: Set Up Load Balancer
-  hosts: loadbalancer
-  remote_user: root
   tasks:
   - name: Install nginx repo
     ansible.builtin.yum_repository:
