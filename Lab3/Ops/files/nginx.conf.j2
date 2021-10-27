@@ -22,7 +22,7 @@ http {
         ssl_certificate_key /etc/ssl/calWeb/calWeb.com.pem;
 
         location / {
-            proxy_pass https://calWeb;
+            proxy_pass http://calWeb;
         }
     }
 }
