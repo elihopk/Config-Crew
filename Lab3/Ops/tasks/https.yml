@@ -2,3 +2,20 @@
   ansible.builtin.yum:
     name: openssl
     state: latest
+- name: instlly pyOpenSSL
+  ansible.builtin.yum:
+    name: pyOpenSSL
+    state: latest
+- name: openssl certificate files
+  openssl_privatekey:
+    path: /etc/ssl/private/calWeb.com.pem
+  openssl_csr:
+    path: /etc/ssl/cert/calWeb.com.csr
+    privatekey_path: /etc/ssl/private/calWeb.com.pem
+    common_name: www.calWeb.com
+  openssl_certificate:
+    path: /etc/ssl/crt/calWeb.com.crt
+    privatekey_path: /etc/ssl/private/calWeb.com.pem
+    csr_path: /etc/ssl/cert/calWeb.com.csr
+    provider: selfsigned
+
