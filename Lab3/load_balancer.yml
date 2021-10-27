@@ -2,15 +2,16 @@
 ### LOAD BALANCER INSTALL SCRIPT ###
 ####################################
 #requires ansible.posix
+
 - name: Confirm Group
   hosts: prod
-  tasks:
-    - ansible.builtin.ping
-- name: Set Up Load Balancer
-  hosts: all
   remote_user: root
-  vars:
-    groupName: 
+  tasks:
+  - name: ping
+    ansible.builtin.ping:
+- name: Set Up Load Balancer
+  hosts: loadbalancer
+  remote_user: root
   tasks:
   - name: Install nginx repo
     ansible.builtin.yum_repository:
