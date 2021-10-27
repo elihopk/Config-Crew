@@ -1,16 +1,20 @@
 ##########################################
 ## LOAD BALANCER INFRASTRUCTURE CREATOR ##
 ##########################################
-
-
 - name: setup apache
+  tags:
+   - webServer
   hosts: prod
   remote_user: root
   tasks:
-    - include: apache.yml
+    - include: tasks/updateAll.yml
+    - include: tasks/apache.yml
 
 - name: setup balancer
+  tags:
+   - balancer
   hosts: loadbalancer
   remote_user: root
   tasks:
-    - include: load_balancer.yml
+    - include: tasks/updateAll.yml
+    - include: tasks/load_balancer.yml

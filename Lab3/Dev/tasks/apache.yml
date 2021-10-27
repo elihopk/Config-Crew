@@ -1,7 +1,3 @@
-- name: Update Packages
-  ansible.builtin.yum:
-    name: '*'
-    state: latest
 - name: Install Apache
   ansible.builtin.yum:
     name: httpd
@@ -26,7 +22,7 @@
     state: stopped
 - name: Copy Webserver Site and Configs to Target
   ansible.builtin.copy:
-    src: /img/
+    src: files/img/
     dest: /
     force: yes
 - name: Start and Enable HTTPD Unit
