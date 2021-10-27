@@ -19,7 +19,7 @@ http {
         listen 443 ssl;
 
         ssl_certificate /etc/ssl/calWeb/calWeb.com.crt;
-        ssk_certificate_key /etc/ssl/calWeb/calWeb.com.pem;
+        ssl_certificate_key /etc/ssl/calWeb/calWeb.com.pem;
 
         location / {
             proxy_pass http://calWeb;
