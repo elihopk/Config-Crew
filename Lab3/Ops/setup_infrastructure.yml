@@ -8,11 +8,12 @@
   tags:
    - balancer
    - webServer
+  remote_user: root
   hosts:
    - prod
    - balancer
   tasks:
-  
+
 - name: setup apache
   tags:
    - webServer
