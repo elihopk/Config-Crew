@@ -1,0 +1,16 @@
+##########################################
+## LOAD BALANCER INFRASTRUCTURE CREATOR ##
+##########################################
+
+
+- name: setup apache
+  hosts: prod
+  remote_user: root
+  tasks:
+    - include: apache.yml
+
+- name: setup balancer
+  hosts: loadbalancer
+  remote_user: root
+  tasks:
+    - include: load_balancer.yml

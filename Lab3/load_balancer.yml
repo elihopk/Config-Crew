@@ -3,12 +3,6 @@
 ####################################
 #requires ansible.posix
 
-- name: Confirm Group
-  hosts: prod
-  remote_user: root
-  tasks:
-  - name: ping
-    ansible.builtin.ping:
 - name: Set Up Load Balancer
   hosts: loadbalancer
   remote_user: root
@@ -29,10 +23,10 @@
       permanent: yes
       immediate: yes
       state: enabled
-  - name: Install default.conf
+  - name: Install nginx.conf
     ansible.builtin.template:
-      src: default.conf.j2
-      dest: /etc/nginx/conf.d/default.conf
+      src: nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
 
   - name: Enable/Start nignx
     ansible.builtin.systemd:
