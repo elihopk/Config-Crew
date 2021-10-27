@@ -1,7 +1,7 @@
 http {
     upstream calWeb {
         least_conn;
-        {% for host in groups[{{groupName}}] %}
+        {% for host in groups[prod] %}
         {{ item }}
         {% endfor %}
     }

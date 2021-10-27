@@ -2,15 +2,10 @@
 ### LOAD BALANCER INSTALL SCRIPT ###
 ####################################
 #requires ansible.posix
-
-- vars:
-    groupName: 'prod'
-
 - name: Confirm Group
-  hosts: {{ groupName }}
+  hosts: prod
   tasks:
     - ansible.builtin.ping
-
 - name: Set Up Load Balancer
   hosts: all
   remote_user: root
