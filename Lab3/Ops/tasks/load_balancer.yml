@@ -18,6 +18,12 @@
     permanent: yes
     immediate: yes
     state: enabled
+- name: open https port
+  ansible.posix.firewalld:
+    service: https
+    permanent: yes
+    immediate: yes
+    state: enabled
 - name: Install nginx.conf
   ansible.builtin.template:
     src: files/nginx.conf.j2
