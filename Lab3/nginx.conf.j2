@@ -16,23 +16,10 @@ http {
     }
     server {
         listen 80;
+        listen 443 ssl;
 
         location / {
-            proxy_pass http://calWeb;
-        }
-    }
-}
-
-https {
-    upstream calWeb {
-        least_conn;
-        {% for host in groups['prod'] %}server {{hostvars[host]['ansible_default_ipv4']['address']}}; {% endfor %}
-    }
-    server {
-        listen 443;
-
-        location / {
-            proxy_pass https://calWeb;
+            proxy_pass calWeb;
         }
     }
 }
