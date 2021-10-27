@@ -1,39 +1,45 @@
 ---
 # Depends on ansible.posix
 # Install with "ansible-galaxy collection install ansible.posix"
-- name: Update Packages
-  ansible.builtin.yum:
-    name: '*'
-    state: latest
-- name: Install Apache
-  ansible.builtin.yum:
-    name: httpd
-    state: latest
-- name: Open HTTP Service
-  ansible.posix.firewalld:
-    service: http
-    permanent: yes
-    state: enabled
-- name: Open HTTPS Service
-  ansible.posix.firewalld:
-    service: https
-    permanent: yes
-    state: enabled
-- name: Reload Firewalld
-  ansible.builtin.systemd:
-    name: firewalld
-    state: reloaded
-- name: Ensure HTTPD Unit is Stopped
-  ansible.builtin.systemd:
-    name: httpd
-    state: stopped
-- name: Copy Webserver Site and Configs to Target
-  ansible.builtin.copy:
-    src: /img/
-    dest: /
-    force: yes
-- name: Start and Enable HTTPD Unit
-  ansible.builtin.systemd:
-    name: httpd
-    enabled: yes
-    state: started    
+- name: Deploy the Explore California Web Page to the Specified Hosts
+  # Target all hosts. This should be limited to 1 group using the limit flag of ansible-playbook
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: Update Packages
+    ansible.builtin.yum:
+      name: '*'
+      state: latest
+  - name: Install Apache
+    ansible.builtin.yum:
+      name: httpd
+      state: latest
+  - name: Open HTTP Service
+    ansible.posix.firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+  - name: Open HTTPS Service
+    ansible.posix.firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+  - name: Reload Firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      state: reloaded
+  - name: Ensure HTTPD Unit is Stopped
+    ansible.builtin.systemd:
+      name: httpd
+      state: stopped
+  - name: Copy Webserver Site and Configs to Target
+    ansible.builtin.copy:
+      src: /img/
+      dest: /
+      force: yes
+  - name: Start and Enable HTTPD Unit
+    ansible.builtin.systemd:
+      name: httpd
+      enabled: yes
+      state: started    
