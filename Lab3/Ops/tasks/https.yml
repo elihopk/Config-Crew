@@ -6,18 +6,23 @@
   ansible.builtin.yum:
     name: pyOpenSSL
     state: latest
+- name: set up ssl directories
+  ansible.builtin.file:
+    path: /etc/ssl/calWeb
+    state: directory
+    mode: '0755'
 - name: generate openssl private key
   openssl_privatekey:
-    path: /etc/ssl/private/calWeb.com.pem
+    path: /etc/ssl/calWeb/calWeb.com.pem
 - name: generate openssl certificate request
   openssl_csr:
-    path: /etc/ssl/cert/calWeb.com.csr
-    privatekey_path: /etc/ssl/private/calWeb.com.pem
+    path: /etc/ssl/calWeb/calWeb.com.csr
+    privatekey_path: /etc/ssl/calWeb/calWeb.com.pem
     common_name: www.calWeb.com
 - name: generate openssl certificate
   openssl_certificate:
-    path: /etc/ssl/crt/calWeb.com.crt
-    privatekey_path: /etc/ssl/private/calWeb.com.pem
-    csr_path: /etc/ssl/cert/calWeb.com.csr
+    path: /etc/ssl/calWeb/calWeb.com.crt
+    privatekey_path: /etc/ssl/calWeb/calWeb.com.pem
+    csr_path: /etc/ssl/calWeb/calWeb.com.csr
     provider: selfsigned
 
