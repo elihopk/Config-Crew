@@ -4,6 +4,15 @@
 # usage: 'ansible-playbook setup_infrastructure.yml' #
 # to limit to a certain servers, use '-t {tag name}' #
 ######################################################
+- name: load hostData
+  tags:
+   - balancer
+   - webServer
+  hosts:
+   - prod
+   - balancer
+  tasks:
+  
 - name: setup apache
   tags:
    - webServer
