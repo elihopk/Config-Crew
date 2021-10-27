@@ -11,7 +11,7 @@
   remote_user: root
   hosts:
    - prod
-   - balancer
+   - loadbalancer
   tasks:
 
 - name: setup apache
@@ -31,4 +31,5 @@
   remote_user: root
   tasks:
     - include: tasks/updateAll.yml
+    - include: tasks/https.yml
     - include: tasks/load_balancer.yml

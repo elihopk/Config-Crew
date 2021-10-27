@@ -1,0 +1,4 @@
+- name: install OpenSSL
+  ansible.builtin.yum:
+    name: openssl
+    state: latest
