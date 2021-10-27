@@ -1,9 +1,7 @@
 http {
     upstream calWeb {
         least_conn;
-        {% for host in groups['prod'] %}
-{{hostvars[host]['ansible_default_ipv4']['address']}};
-        {% endfor %}
+        {% for host in groups['prod'] %} {{hostvars[host]['ansible_default_ipv4']['address']}}; {% endfor %}
     }
     server {
         listen 80;
