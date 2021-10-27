@@ -4,7 +4,7 @@
     state: latest
 - name: install cryptography
   ansible.builtin.yum:
-    name: python-crypto
+    name: python2-cryptography
     state: latest
 - name: set up ssl directories
   ansible.builtin.file:
@@ -13,7 +13,7 @@
     mode: '0755'
 - name: generate openssl private key
   openssl_privatekey:
-    path: /etc/ssl/calWeb/calweb.com.pem
+    path: /etc/ssl/calWeb/calWeb.com.pem
 - name: generate openssl certificate request
   openssl_csr:
     path: /etc/ssl/calWeb/calWeb.com.csr
