@@ -1,0 +1,24 @@
+######################################################
+######## LOAD BALANCER INFRASTRUCTURE CREATOR ########
+######################################################
+# usage: 'ansible-playbook setup_infrastructure.yml' #
+# to limit to a certain servers, use '-t {tag name}' #
+######################################################
+- name: setup apache
+  tags:
+   - webServer
+  hosts: prod
+  remote_user: root
+  tasks:
+    - name: yum update
+      include: tasks/updateAll.yml
+    - include: tasks/apache.yml
+
+- name: setup balancer
+  tags:
+   - balancer
+  hosts: loadbalancer
+  remote_user: root
+  tasks:
+    - include: tasks/updateAll.yml
+    - include: tasks/load_balancer.yml
