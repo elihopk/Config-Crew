@@ -19,7 +19,7 @@ http {
         listen 443 ssl;
 
         location / {
-            proxy_pass calWeb;
+            proxy_pass http://calWeb;
         }
     }
 }
