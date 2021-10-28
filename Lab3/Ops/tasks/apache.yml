@@ -2,6 +2,10 @@
   ansible.builtin.yum:
     name: httpd
     state: latest
+- name: Install mod ssl
+  ansible.builtin.yum:
+    name: mod_ssl
+    state: latest
 - name: Open HTTP Service
   ansible.posix.firewalld:
     service: http
