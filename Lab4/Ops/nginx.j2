@@ -1,0 +1,25 @@
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    upstream calWeb {
+        {% for host in groups['prod'] %}
+        server {{hostvars[host]['ansible_host']}};
+        {% endfor %}
+    }
+
+    server {
+        location / {
+            proxy_pass http://calWeb;
+        }
+    }
+}
