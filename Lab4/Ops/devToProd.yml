@@ -1,0 +1,74 @@
+---
+
+# Depends on community.general
+# Install with: ansible-galaxy collection install community.general
+
+####################################################
+# Config Crew Ops Team calWeb Dev to Prod Playbook #
+####################################################
+
+# Usage: ansible-playbook devToProd.yml
+
+- name: calWeb Dev to Prod
+  hosts: loadbalancer
+  remote_user: root
+
+  tasks:
+
+    # The tasks up until the next comment remove all dev and prod values from inventory and then readd them swapped
+    - name: Remove Old Dev Values from Ansible Inventory
+      delegate_to: localhost
+      community.general.ini_file:
+        path: /etc/ansible/hosts
+        section: dev
+        option: "{{ item }} ansible_host"
+        mode: 0644
+        state: absent
+      loop: "{{ groups['dev'] }}"
+
+    - name: Remove Old Prod Values from Ansible Inventory
+      delegate_to: localhost
+      community.general.ini_file:
+        path: /etc/ansible/hosts
+        section: prod
+        option: "{{ item }} ansible_host"
+        mode: 0644
+        state: absent
+      loop: "{{ groups['prod'] }}"
+
+    - name: Add New Dev Values to Ansible Inventory
+      delegate_to: localhost
+      community.general.ini_file:
+        path: /etc/ansible/hosts
+        section: dev
+        option: "{{ item }} ansible_host"
+        value: "{{ hostvars[item]['ansible_host'] }}"
+        mode: 0644
+      loop: "{{ groups['prod'] }}"
+
+    - name: Add New Prod Values to Ansible Inventory
+      delegate_to: localhost
+      community.general.ini_file:
+        path: /etc/ansible/hosts
+        section: prod
+        option: "{{ item }} ansible_host"
+        value: "{{ hostvars[item]['ansible_host'] }}"
+        mode: 0644
+      loop: "{{ groups['dev'] }}"
+
+    # Refresh the dynamic inventory before updating the loadbalancer config
+    - name: Refresh Inventory
+      ansible.builtin.meta: refresh_inventory
+
+    # Update the load balancer config
+    - name: Update Load Balancer Config File
+      ansible.builtin.template:
+        src: nginx.j2
+        dest: /etc/nginx/nginx.conf
+        mode: 0644
+
+    # Reload the loadbalancer to get the new production hosts
+    - name: Reload Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: reloaded

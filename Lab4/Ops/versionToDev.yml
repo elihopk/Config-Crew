@@ -1,0 +1,40 @@
+---
+
+#######################################################
+# Config Crew Ops Team calWeb Version to Dev Playbook #
+#######################################################
+
+# Usage: ansible-playbook versionToDev.yml
+
+- name: calWeb Version to Dev
+  hosts: dev
+  remote_user: root
+  vars_prompt:
+    - name: version
+      prompt: What Explore California Website Version would you like to Install (1.0, 2.0, 3.0, 4.0)?
+      private: false
+
+  tasks:
+
+    # This is needed as the private key for the git repo must be on the target host
+    - name: Copy Over Git Auth Key
+      ansible.builtin.copy:
+        src: calWebKey
+        dest: /gitauth/
+
+    # Clone the requested tag from the git repo onto the web server
+    - name: Install Specified Explore California Website Version
+      ansible.builtin.git:
+        repo: https://github.com/elihopk/calWeb.git
+        dest: /var/www/html
+        force: true
+        key_file: /gitauth/calWebKey
+        version: {{ version }}
+
+    # Output some useful information for the user
+    - ansible.builtin.debug:
+        msg: "Explore California Version {{ version }} has been installed. Please verify that the website functions as expected on the following hosts:"
+
+    - ansible.builtin.debug:
+        msg: "{{ hostvars[item]['ansible_host'] }}"
+      loop: "{{ groups['dev'] }}"
