@@ -1,0 +1,12 @@
+############################
+### DOCKER SETUP ###
+
+- name : Install necessary software
+  hosts: dockerServer
+  remote_user: root
+
+  tasks:
+    - name: Install Docker
+      ansible.builtin.yum:
+        name: docker
+        state: latest
