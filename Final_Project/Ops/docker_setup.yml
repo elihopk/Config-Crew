@@ -10,3 +10,10 @@
       ansible.builtin.yum:
         name: docker
         state: latest
+    - name: Install python3
+      ansible.builtin.yum:
+        name: python3
+        state: latest
+    - name: Install Docker Python Files
+      ansible.builtin.pip:
+        name: docker
