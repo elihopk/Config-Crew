@@ -1,7 +1,7 @@
 ---
 
-# Depends on community.docker
-# Install with: ansible-galaxy collection install community.docker
+# Depends on community.docker, community.general, and ansible.posix
+# Install with: ansible-galaxy collection install community.docker community.general ansible.posix
 
 #################################################################
 # Config Crew Ops Team Deploy Portable Web Environment Playbook #
@@ -83,6 +83,54 @@
           - 943:943
           - 9443:9443
           - 1194:1194
+        env:
+          PUID: 1000
+          PGID: 1000
+          TZ: America/New_York
+        capabilities:
+          - NET_ADMIN
         recreate: true
         volumes:
           - /vpnconf:/config
+    - name: Open Firewall Ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - 943/TCP
+        - 943/UDP
+        - 944/TCP
+        - 944/UDP
+        - 9443/TCP
+        - 9443/UDP
+        - 1194/TCP
+        - 1194/UDP
+        - 139/TCP
+        - 139/UDP
+        - 445/TCP
+        - 445/UDP
+        - 8080/TCP
+        - 8080/UDP
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded
+    - name: Get Public IP
+      community.general.ipify_facts:
+      register: publicip
+    - name: Show Info Output
+      ansible.builtin.debug:
+        msg: "Your portable web environment should now be online! Your external IP is: {{ publicip }},
+          your internal IP is: {{ hostvars[inventory_hostname]['ansible_host'] }}.
+          Please be sure to port forward the following ports if necessary as Ansible can't do this for you:"
+    - name: Show Ports to Forward
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_items:
+        - 944/TCP
+        - 944/UDP
+        - 9443/TCP
+        - 9443/UDP
+        - 1194/TCP
+        - 1194/UDP

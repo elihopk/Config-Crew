@@ -35,7 +35,7 @@
         path: /vpnconf
         state: absent
     # Delete Web Directory
-    - name: Delete OpenVPN-AS Configs
+    - name: Delete Web Directory
       ansible.builtin.file:
         path: /www
         state: absent
