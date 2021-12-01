@@ -17,9 +17,9 @@
     # Add the Docker yum Repository
     - name: Add Repository
       ansible.builtin.yum_repository:
-        name: docker
+        name: Docker
         description: Docker Repo
-        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+        baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
         # Trust Packages Downloaded from this Repo Automatically
         gpgcheck: false
     # Install Docker
