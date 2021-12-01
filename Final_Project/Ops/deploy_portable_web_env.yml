@@ -109,6 +109,11 @@
         dest: /vpnconf
         mode: 0755
         force: true
+    - name: Make Scripts Runnable
+      ansible.builtin.file:
+        name: /vpnconf/scripts/
+        mode: 0647
+        recurse: true
     - name: Recreate OpenVPN Container
       community.docker.docker_container:
         auto_remove: true
