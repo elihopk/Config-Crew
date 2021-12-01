@@ -30,24 +30,18 @@
       with_items:
         - epel-release
         - docker
-        - python
-        - python-pip
+        - python3
+        - python3-pip
     - name: Install Docker Python Package
       ansible.builtin.pip:
         name: docker
+        executable: pip3
     # Ensure Docker is Started and Starts on Boot
     - name: Start and Enable Docker
       ansible.builtin.systemd:
         name: docker
         enabled: true
         state: started
-    # Copy OpenVPN Config
-    # - name: Copy OpenVPN-AS Configs
-    #   ansible.builtin.copy:
-    #     src: vpnconf/
-    #     dest: /vpnconf
-    #     mode: 0755
-    #     force: true
     # Create HTTPD Container with Appropriate Settings
     - name: Create HTTPD Container
       community.docker.docker_container:
@@ -61,6 +55,8 @@
         recreate: true
         volumes:
           - /www:/usr/local/apache2/htdocs
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
     # Create Samba Container with Appropriate Settings
     - name: Create Samba Container
       community.docker.docker_container:
@@ -75,8 +71,10 @@
         recreate: true
         volumes:
           - /www:/mount
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
     # Create OpenVPN Container with Appropriate Settings
-    - name: Create OpenVPN Container
+    - name: Create OpenVPN Container to Generate Configs
       community.docker.docker_container:
         auto_remove: true
         container_default_behavior: compatibility
@@ -96,6 +94,43 @@
         recreate: true
         volumes:
           - /vpnconf:/config
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    - name: Stop OpenVPN
+      community.docker.docker_container:
+        name: openvpn
+        state: absent
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+    # Copy OpenVPN Config
+    - name: Overwrite OpenVPN-AS Configs
+      ansible.builtin.copy:
+        src: vpnconf/
+        dest: /vpnconf
+        mode: 0755
+        force: true
+    - name: Recreate OpenVPN Container
+      community.docker.docker_container:
+        auto_remove: true
+        container_default_behavior: compatibility
+        hostname: openvpn
+        image: linuxserver/openvpn-as
+        name: openvpn
+        published_ports:
+          - 943:943
+          - 9443:9443
+          - 1194:1194
+        env:
+          PUID: 1000
+          PGID: 1000
+          TZ: America/New_York
+        capabilities:
+          - NET_ADMIN
+        recreate: true
+        volumes:
+          - /vpnconf:/config
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
     - name: Open Firewall Ports
       ansible.posix.firewalld:
         port: "{{ item }}"
