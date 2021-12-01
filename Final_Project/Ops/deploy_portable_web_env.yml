@@ -32,6 +32,7 @@
         - docker
         - python3
         - python3-pip
+        - rsync
     - name: Install Docker Python Package
       ansible.builtin.pip:
         name: docker
