@@ -1,0 +1,88 @@
+---
+
+# Depends on community.docker
+# Install with: ansible-galaxy collection install community.docker
+
+#################################################################
+# Config Crew Ops Team Deploy Portable Web Environment Playbook #
+#################################################################
+
+# Usage: ansible-playbook --limit <hosts> deploy_portable_web_env.yml
+
+- name: Deploy Portable Web Environment
+  hosts: all
+  remote_user: root
+
+  tasks:
+    # Add the Docker yum Repository
+    - name: Add Repository
+      ansible.builtin.yum_repository:
+        name: docker
+        description: Docker Repo
+        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+        # Trust Packages Downloaded from this Repo Automatically
+        gpgcheck: false
+    # Install Docker
+    - name: Install Docker and Dependencies
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+    # Ensure Docker is Started and Starts on Boot
+    - name: Start and Enable Docker
+      ansible.builtin.systemd:
+        name: docker
+        enabled: true
+        state: started
+    # Copy OpenVPN Config
+    - name: Copy OpenVPN-AS Configs
+      ansible.builtin.copy:
+        src: vpnconf/
+        dest: /vpnconf
+        mode: 0755
+        force: true
+    # Create HTTPD Container with Appropriate Settings
+    - name: Create HTTPD Container
+      community.docker.docker_container:
+        auto_remove: true
+        container_default_behavior: compatibility
+        hostname: portablehttp
+        image: httpd
+        name: httpd
+        published_ports:
+          - 8080:80
+        recreate: true
+        volumes:
+          - /www:/usr/local/apache2/htdocs
+    # Create Samba Container with Appropriate Settings
+    - name: Create Samba Container
+      community.docker.docker_container:
+        auto_remove: true
+        container_default_behavior: compatibility
+        hostname: wwwfileshare
+        image: dperson/samba
+        name: samba
+        published_ports:
+          - 139:139
+          - 445:445
+        recreate: true
+        volumes:
+          - /www:/mount
+    # Create OpenVPN Container with Appropriate Settings
+    - name: Create OpenVPN Container
+      community.docker.docker_container:
+        auto_remove: true
+        container_default_behavior: compatibility
+        hostname: openvpn
+        image: linuxserver/openvpn-as
+        name: openvpn
+        published_ports:
+          - 943:943
+          - 9443:9443
+          - 1194:1194
+        recreate: true
+        volumes:
+          - /vpnconf:/config
