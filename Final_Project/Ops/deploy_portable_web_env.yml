@@ -137,20 +137,20 @@
         permanent: true
         state: enabled
       with_items:
-        - 943/TCP
-        - 943/UDP
-        - 944/TCP
-        - 944/UDP
-        - 9443/TCP
-        - 9443/UDP
-        - 1194/TCP
-        - 1194/UDP
-        - 139/TCP
-        - 139/UDP
-        - 445/TCP
-        - 445/UDP
-        - 8080/TCP
-        - 8080/UDP
+        - 943/tcp
+        - 943/udp
+        - 944/tcp
+        - 944/udp
+        - 9443/tcp
+        - 9443/udp
+        - 1194/tcp
+        - 1194/udp
+        - 139/tcp
+        - 139/udp
+        - 445/tcp
+        - 445/udp
+        - 8080/tcp
+        - 8080/udp
     - name: Reload Firewalld
       ansible.builtin.systemd:
         name: firewalld
@@ -167,9 +167,9 @@
       ansible.builtin.debug:
         msg: "{{ item }}"
       with_items:
-        - 944/TCP
-        - 944/UDP
-        - 9443/TCP
-        - 9443/UDP
-        - 1194/TCP
-        - 1194/UDP
+        - 944/tcp
+        - 944/udp
+        - 9443/tcp
+        - 9443/udp
+        - 1194/tcp
+        - 1194/udp
