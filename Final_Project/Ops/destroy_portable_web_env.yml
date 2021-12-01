@@ -12,20 +12,22 @@
 - name: Destroy Portable Web Environment
   hosts: all
   remote_user: root
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     # Create HTTPD Container with Appropriate Settings
-    - name: Create HTTPD Container
+    - name: Remove HTTPD Container
       community.docker.docker_container:
         name: httpd
         state: absent
     # Delete Samba Container
-    - name: Create Samba Container
+    - name: Remove Samba Container
       community.docker.docker_container:
         name: samba
         state: absent
     # Delete OpenVPN Container
-    - name: Delete OpenVPN Container
+    - name: Remove OpenVPN Container
       community.docker.docker_container:
         name: openvpn
         state: absent
