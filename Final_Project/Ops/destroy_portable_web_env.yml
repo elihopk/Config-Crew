@@ -1,0 +1,41 @@
+---
+
+# Depends on community.docker
+# Install with: ansible-galaxy collection install community.docker
+
+##################################################################
+# Config Crew Ops Team Destroy Portable Web Environment Playbook #
+##################################################################
+
+# Usage: ansible-playbook --limit <hosts> destroy_portable_web_env.yml
+
+- name: Destroy Portable Web Environment
+  hosts: all
+  remote_user: root
+
+  tasks:
+    # Create HTTPD Container with Appropriate Settings
+    - name: Create HTTPD Container
+      community.docker.docker_container:
+        name: httpd
+        state: absent
+    # Delete Samba Container
+    - name: Create Samba Container
+      community.docker.docker_container:
+        name: samba
+        state: absent
+    # Delete OpenVPN Container
+    - name: Delete OpenVPN Container
+      community.docker.docker_container:
+        name: openvpn
+        state: absent
+    # Delete OpenVPN Config
+    - name: Delete OpenVPN-AS Configs
+      ansible.builtin.file:
+        path: /vpnconf
+        state: absent
+    # Delete Web Directory
+    - name: Delete OpenVPN-AS Configs
+      ansible.builtin.file:
+        path: /www
+        state: absent
