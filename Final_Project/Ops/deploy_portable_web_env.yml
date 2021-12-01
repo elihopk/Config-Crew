@@ -28,13 +28,12 @@
         name: "{{ item }}"
         state: present
       with_items:
+        - epel-release
         - docker-ce
         - docker-ce-cli
         - containerd.io
         - python
-        - pip
-        - virtualenv
-        - setuptools
+        - python-pip
     - name: Install Docker Python Package
       ansible.builtin.pip:
         name: docker
