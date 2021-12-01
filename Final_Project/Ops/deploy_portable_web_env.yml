@@ -31,6 +31,10 @@
         - docker-ce
         - docker-ce-cli
         - containerd.io
+        - python
+        - pip
+        - virtualenv
+        - setuptools
     - name: Install Docker Python Package
       ansible.builtin.pip:
         name: docker
