@@ -31,6 +31,9 @@
         - docker-ce
         - docker-ce-cli
         - containerd.io
+    - name: Install Docker Python Package
+      ansible.builtin.pip:
+        name: docker
     # Ensure Docker is Started and Starts on Boot
     - name: Start and Enable Docker
       ansible.builtin.systemd:
@@ -38,12 +41,12 @@
         enabled: true
         state: started
     # Copy OpenVPN Config
-    - name: Copy OpenVPN-AS Configs
-      ansible.builtin.copy:
-        src: vpnconf/
-        dest: /vpnconf
-        mode: 0755
-        force: true
+    # - name: Copy OpenVPN-AS Configs
+    #   ansible.builtin.copy:
+    #     src: vpnconf/
+    #     dest: /vpnconf
+    #     mode: 0755
+    #     force: true
     # Create HTTPD Container with Appropriate Settings
     - name: Create HTTPD Container
       community.docker.docker_container:
