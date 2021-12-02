@@ -75,7 +75,7 @@
       vars:
         ansible_python_interpreter: /usr/bin/python3
     # Create OpenVPN Container with Appropriate Settings
-    - name: Create OpenVPN Container to Generate Configs
+    - name: Create OpenVPN Container
       community.docker.docker_container:
         auto_remove: true
         container_default_behavior: compatibility
@@ -104,10 +104,10 @@
     #   vars:
     #     ansible_python_interpreter: /usr/bin/python3
     # Copy OpenVPN Config
-    # - name: Overwrite OpenVPN-AS Configs
-    #   ansible.posix.synchronize:
-    #     src: vpnconf/
-    #     dest: /vpnconf
+    - name: Overwrite OpenVPN-AS Configs
+      ansible.posix.synchronize:
+        src: vpnconf/
+        dest: /vpnconf
     # - name: Recreate OpenVPN Container
     #   community.docker.docker_container:
     #     auto_remove: true
