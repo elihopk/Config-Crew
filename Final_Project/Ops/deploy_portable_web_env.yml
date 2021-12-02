@@ -97,12 +97,12 @@
           - /vpnconf:/config
       vars:
         ansible_python_interpreter: /usr/bin/python3
-    - name: Stop OpenVPN
-      community.docker.docker_container:
-        name: openvpn
-        state: absent
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
+    # - name: Stop OpenVPN
+    #   community.docker.docker_container:
+    #     name: openvpn
+    #     state: absent
+    #   vars:
+    #     ansible_python_interpreter: /usr/bin/python3
     # Copy OpenVPN Config
     # - name: Overwrite OpenVPN-AS Configs
     #   ansible.posix.synchronize:
