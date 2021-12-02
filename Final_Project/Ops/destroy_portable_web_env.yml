@@ -16,7 +16,7 @@
     ansible_python_interpreter: /usr/bin/python3
 
   tasks:
-    # Create HTTPD Container with Appropriate Settings
+    # Delete HTTPD Container
     - name: Remove HTTPD Container
       community.docker.docker_container:
         name: httpd
@@ -32,7 +32,7 @@
         name: openvpn
         state: absent
     # Delete OpenVPN Config
-    - name: Delete OpenVPN-AS Configs
+    - name: Remove OpenVPN-AS Configs
       ansible.builtin.file:
         path: /vpnconf
         state: absent
@@ -41,3 +41,29 @@
       ansible.builtin.file:
         path: /www
         state: absent
+    # Close Firewall Ports for Security
+    - name: Close Firewall Ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: disabled
+      with_items:
+        - 943/tcp
+        - 943/udp
+        - 944/tcp
+        - 944/udp
+        - 9443/tcp
+        - 9443/udp
+        - 1194/tcp
+        - 1194/udp
+        - 139/tcp
+        - 139/udp
+        - 445/tcp
+        - 445/udp
+        - 8080/tcp
+        - 8080/udp
+    # Bring Firewall Changes into Effect
+    - name: Reload Firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: reloaded

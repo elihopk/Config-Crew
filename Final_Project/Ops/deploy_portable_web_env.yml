@@ -22,7 +22,7 @@
         baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
         # Trust Packages Downloaded from this Repo Automatically
         gpgcheck: false
-    # Install Docker
+    # Install Docker and Other Items Necessary for the Playbook
     - name: Install Docker and Dependencies
       ansible.builtin.yum:
         name: "{{ item }}"
@@ -33,18 +33,26 @@
         - python3
         - python3-pip
         - rsync
+    # Install the Docker Python Package which is Necessary for community.docker.docker_container to work
     - name: Install Docker Python Package
       ansible.builtin.pip:
         name: docker
         executable: pip3
+    # Disable SELinux as it causes Odd Permissions Issues
     - name: Disable SELinux
-      ansible.builtin.shell: setenforce 0
+      ansible.posix.selinux:
+        state: disabled
     # Ensure Docker is Started and Starts on Boot
     - name: Start and Enable Docker
       ansible.builtin.systemd:
         name: docker
         enabled: true
         state: started
+    # Copy OpenVPN Config
+    - name: Copy OpenVPN-AS Configs
+      ansible.posix.synchronize:
+        src: vpnconf/
+        dest: /vpnconf
     # Create HTTPD Container with Appropriate Settings
     - name: Create HTTPD Container
       community.docker.docker_container:
@@ -65,7 +73,7 @@
       community.docker.docker_container:
         auto_remove: true
         container_default_behavior: compatibility
-        hostname: wwwfileshare
+        hostname: samba
         image: dperson/samba
         name: samba
         published_ports:
@@ -76,11 +84,6 @@
           - /www:/mount
       vars:
         ansible_python_interpreter: /usr/bin/python3
-    # Copy OpenVPN Config
-    - name: Copy OpenVPN-AS Configs
-      ansible.posix.synchronize:
-        src: vpnconf/
-        dest: /vpnconf
     # Create OpenVPN Container with Appropriate Settings
     - name: Create OpenVPN Container
       community.docker.docker_container:
@@ -105,6 +108,7 @@
           - /vpnconf:/config
       vars:
         ansible_python_interpreter: /usr/bin/python3
+    # These Ports Need to be Open so that the Services are Accessible
     - name: Open Firewall Ports
       ansible.posix.firewalld:
         port: "{{ item }}"
@@ -125,18 +129,22 @@
         - 445/udp
         - 8080/tcp
         - 8080/udp
+    # Reload the Firewall to bring Changes into Effect
     - name: Reload Firewalld
       ansible.builtin.systemd:
         name: firewalld
         state: reloaded
+    # Get the Public IP Address for the User to Connect to
+    # Unfortunately this does not Play Nice with RLES and that IP will be Inaccessible
     - name: Get Public IP
       community.general.ipify_facts:
       register: publicip
+    # Show User some Helpful Output
     - name: Show Info Output
       ansible.builtin.debug:
-        msg: "Your portable web environment should now be online! Your external IP is: {{ publicip }},
+        msg: "Your portable web environment should now be online! Your external VPN address is: {{ publicip }}:944,
           your internal IP is: {{ hostvars[inventory_hostname]['ansible_host'] }}.
-          Please be sure to port forward the following ports if necessary as Ansible can't do this for you:"
+          Please be sure to port forward the following ports on your router if necessary as Ansible can't do this for you:"
     - name: Show Ports to Forward
       ansible.builtin.debug:
         msg: "{{ item }}"
