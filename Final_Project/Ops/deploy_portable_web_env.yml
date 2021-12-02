@@ -91,6 +91,7 @@
         name: openvpn
         published_ports:
           - 943:943
+          - 944:944
           - 9443:9443
           - 1194:1194
         env:
