@@ -83,8 +83,8 @@
         volumes:
           - /www:/www
         env:
-          SHARE: www;/www
-          USER: admin;password;yes;no;no;all;all
+          SHARE: www;/www;yes;no;no;all;all
+          USER: admin;password
       vars:
         ansible_python_interpreter: /usr/bin/python3
     # Create OpenVPN Container with Appropriate Settings
