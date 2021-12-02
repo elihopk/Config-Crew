@@ -81,7 +81,10 @@
           - 445:445
         recreate: true
         volumes:
-          - /www:/mount
+          - /www:/www
+        env:
+          SHARE: www;/www
+          USER: admin;password;yes;no;no;all;all
       vars:
         ansible_python_interpreter: /usr/bin/python3
     # Create OpenVPN Container with Appropriate Settings
