@@ -37,6 +37,9 @@
       ansible.builtin.pip:
         name: docker
         executable: pip3
+    - name: Disable SELinux
+      ansible.posix.selinux:
+        state: disabled
     # Ensure Docker is Started and Starts on Boot
     - name: Start and Enable Docker
       ansible.builtin.systemd:
@@ -92,8 +95,8 @@
           - 9443:9443
           - 1194:1194
         env:
-          PUID: "0"
-          PGID: "0"
+          PUID: "1000"
+          PGID: "1000"
           TZ: "America/New_York"
         capabilities:
           - NET_ADMIN
