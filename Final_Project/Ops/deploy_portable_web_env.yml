@@ -85,7 +85,7 @@
         env:
           SHARE: www;/www;yes;no;no;all;all
           USER: admin;password
-          PERMISSIONS:
+          PERMISSIONS: "true"
       vars:
         ansible_python_interpreter: /usr/bin/python3
     # Create OpenVPN Container with Appropriate Settings
