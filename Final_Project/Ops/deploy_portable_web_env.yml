@@ -38,8 +38,7 @@
         name: docker
         executable: pip3
     - name: Disable SELinux
-      ansible.posix.selinux:
-        state: disabled
+      ansible.builtin.shell: setenforce 0
     # Ensure Docker is Started and Starts on Boot
     - name: Start and Enable Docker
       ansible.builtin.systemd:
