@@ -74,6 +74,11 @@
           - /www:/mount
       vars:
         ansible_python_interpreter: /usr/bin/python3
+    # Copy OpenVPN Config
+    - name: Copy OpenVPN-AS Configs
+      ansible.posix.synchronize:
+        src: vpnconf/
+        dest: /vpnconf
     # Create OpenVPN Container with Appropriate Settings
     - name: Create OpenVPN Container
       community.docker.docker_container:
@@ -87,8 +92,8 @@
           - 9443:9443
           - 1194:1194
         env:
-          PUID: "1000"
-          PGID: "1000"
+          PUID: "0"
+          PGID: "0"
           TZ: "America/New_York"
         capabilities:
           - NET_ADMIN
@@ -97,39 +102,6 @@
           - /vpnconf:/config
       vars:
         ansible_python_interpreter: /usr/bin/python3
-    # - name: Stop OpenVPN
-    #   community.docker.docker_container:
-    #     name: openvpn
-    #     state: absent
-    #   vars:
-    #     ansible_python_interpreter: /usr/bin/python3
-    # Copy OpenVPN Config
-    - name: Overwrite OpenVPN-AS Configs
-      ansible.posix.synchronize:
-        src: vpnconf/
-        dest: /vpnconf
-    # - name: Recreate OpenVPN Container
-    #   community.docker.docker_container:
-    #     auto_remove: true
-    #     container_default_behavior: compatibility
-    #     hostname: openvpn
-    #     image: linuxserver/openvpn-as
-    #     name: openvpn
-    #     published_ports:
-    #       - 943:943
-    #       - 9443:9443
-    #       - 1194:1194
-    #     env:
-    #       PUID: "1000"
-    #       PGID: "1000"
-    #       TZ: "America/New_York"
-    #     capabilities:
-    #       - NET_ADMIN
-    #     recreate: true
-    #     volumes:
-    #       - /vpnconf:/config
-    #   vars:
-    #     ansible_python_interpreter: /usr/bin/python3
     - name: Open Firewall Ports
       ansible.posix.firewalld:
         port: "{{ item }}"
