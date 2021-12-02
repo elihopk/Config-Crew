@@ -145,7 +145,7 @@
     # Show User some Helpful Output
     - name: Show Info Output
       ansible.builtin.debug:
-        msg: "Your portable web environment should now be online! Your external VPN address is: {{ publicip }}:944,
+        msg: "Your portable web environment should now be online! Your external VPN address is: {{ publicip['ansible_facts']['ipify_public_ip'] }}:944,
           your internal IP is: {{ hostvars[inventory_hostname]['ansible_host'] }}.
           Please be sure to port forward the following ports on your router if necessary as Ansible can't do this for you:"
     - name: Show Ports to Forward
