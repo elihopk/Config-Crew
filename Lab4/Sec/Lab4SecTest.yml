@@ -1,0 +1,57 @@
+---
+
+################################################
+# Config Crew Ops Team Lab 4 Sec Test Playbook #
+################################################
+
+# Usage: ansible-playbook Lab4SecTest.yml
+
+- name: Lab 4 Sec Test
+  hosts: prod
+  remote_user: root
+
+  tasks:
+    # Copy, Run, and Print Lab 1 Sec Test
+    - name: Copy Lab 1 Sec Test Script
+      ansible.builtin.copy:
+        src: Lab1SecTest.py
+        dest: /root/Lab1SecTest.py
+
+    - name: Run Lab 1 Sec Test Script
+      ansible.builtin.shell: python /root/Lab1SecTest.py
+      register: output
+
+    - name: Print Lab 1 Sec Test Script Output
+      debug: var=output.stdout_lines
+
+    # Run and Print Lab 2 Expected Load
+    - name: Run Modified Lab 2 Load Test Expected Load
+      delegate_to: localhost
+      ansible.builtin.expect:
+        command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
+        timeout: null
+        responses:
+          "Please enter": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          "Please select":
+            - "E"
+            - "Q"
+      register: expectedout
+
+    - name: Print Lab 2 Load Test Expected Load Output
+      debug: var=expectedout.stdout_lines[-14:-2]
+
+    # Run and Print Lab 2 Overload
+    - name: Run Modified Lab 2 Load Test Overload
+      delegate_to: localhost
+      ansible.builtin.expect:
+        command: /usr/bin/bash /home/student/Desktop/Config-Crew/Lab3/Sec/Lab3LoadTest.sh
+        timeout: null
+        responses:
+          "Please enter": "{{ hostvars[groups['loadBalancer'][0]]['ansible_host'] }}"
+          "Please select":
+            - "O"
+            - "Q"
+      register: overloadout
+
+    - name: Print Lab 2 Load Test Overload Output
+      debug: var=overloadout.stdout_lines[-14:-2]
