@@ -21,20 +21,33 @@
       ansible.builtin.copy:
         src: calWebKey
         dest: /gitauth/
+        mode: 0600
+
+    # Install Git
+    - name: Install Git
+      ansible.builtin.yum:
+        name: git
+        state: present
+
+    # Delete Old Site
+    - name: Remove Old Site Files
+      ansible.builtin.file:
+        path: /var/www/html
+        state: absent
 
     # Clone the requested tag from the git repo onto the web server
     - name: Install Specified Explore California Website Version
       ansible.builtin.git:
-        repo: https://github.com/elihopk/calWeb.git
+        repo: git@github.com:elihopk/calWeb.git
         dest: /var/www/html
-        force: true
+        accept_hostkey: true
         key_file: /gitauth/calWebKey
-        version: {{ version }}
+        version: "{{ version }}"
 
     # Output some useful information for the user
     - ansible.builtin.debug:
         msg: "Explore California Version {{ version }} has been installed. Please verify that the website functions as expected on the following hosts:"
+      run_once: true
 
     - ansible.builtin.debug:
-        msg: "{{ hostvars[item]['ansible_host'] }}"
-      loop: "{{ groups['dev'] }}"
+        msg: "{{ hostvars[inventory_hostname]['ansible_host'] }}"

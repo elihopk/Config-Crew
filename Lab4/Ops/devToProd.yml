@@ -22,6 +22,7 @@
         path: /etc/ansible/hosts
         section: dev
         option: "{{ item }} ansible_host"
+        no_extra_spaces: true
         mode: 0644
         state: absent
       loop: "{{ groups['dev'] }}"
@@ -32,6 +33,7 @@
         path: /etc/ansible/hosts
         section: prod
         option: "{{ item }} ansible_host"
+        no_extra_spaces: true
         mode: 0644
         state: absent
       loop: "{{ groups['prod'] }}"
@@ -42,6 +44,7 @@
         path: /etc/ansible/hosts
         section: dev
         option: "{{ item }} ansible_host"
+        no_extra_spaces: true
         value: "{{ hostvars[item]['ansible_host'] }}"
         mode: 0644
       loop: "{{ groups['prod'] }}"
@@ -52,6 +55,7 @@
         path: /etc/ansible/hosts
         section: prod
         option: "{{ item }} ansible_host"
+        no_extra_spaces: true
         value: "{{ hostvars[item]['ansible_host'] }}"
         mode: 0644
       loop: "{{ groups['dev'] }}"
